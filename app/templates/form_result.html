@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if ok %}
+<h1>Your submitted form:</h1>
+{{ form_content | safe }}
+{% else %}
+<p>Sorry, but something went wrong</p>
+{% endif %}
+<a href="/">Go back</a>
+
+{% endblock content %}
