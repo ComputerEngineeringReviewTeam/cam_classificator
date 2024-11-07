@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 from app.form_generator.generator import *
 
 app = Flask(__name__)
@@ -8,9 +8,15 @@ app = Flask(__name__)
 # Set a secret key for encrypting session data
 app.secret_key = 'my_secret_key'
 
+# Simple dummy users
+users = {'biotech': 'password', 'admin': 'admin1'}
+
 
 @app.route('/')
 def view_form():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     form_config = load_config("form.json")
     form = create_form(form_config)
 
@@ -32,5 +38,30 @@ def handle_post():
         return render_template('form_result.html', ok=False)
 
 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if 'user_id' in session:
+        return redirect(url_for('view_form'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username in users and users[username] == password:
+            session['user_id'] = username
+            return redirect(url_for('view_form'))
+        else:
+            flash("Wrong username / password")
+
+    return render_template('login.html')
+
+
+@app.route("/logout")
+def logout():
+    if 'user_id' in session:
+        session.pop('user_id', None)
+    return redirect(url_for('login'))
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(port=3000)
