@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>All available data</h1>
+
+{% for datapoint in data %}
+<div>
+    <h3>Id: {{ datapoint.id }}</h3><br>
+    <span>Branching points: {{ datapoint.branching_points }}</span><br>
+    <span>Total length: {{ datapoint.total_length }}</span><br>
+    <span>Mean thickness: {{ datapoint.mean_thickness }}</span><br>
+    <span>Total area: {{ datapoint.total_area }}</span><br>
+    <br><br>
+</div>
+{% endfor %}
+
+{% endblock content %}

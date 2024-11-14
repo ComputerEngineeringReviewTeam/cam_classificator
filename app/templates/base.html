@@ -1,36 +1,33 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>CAM-Classifier</title>#}
-{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
-{#    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">#}
-{#</head>#}
-{#<body>#}
-{#    {% block content %}#}
-{#    {% endblock content %}#}
-{#</body>#}
-{#</html>#}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>CAM-Classifier</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
 
+<nav>
+    <a href="/">Home</a>
+    <a href="{{ url_for('publish_new_training_data') }}">New Training data</a>
+    <a href="{{ url_for('view_all_data') }}">View data</a>
+</nav>
+
+<!--
 <h1>Form goes here!</h1>
 <form method="POST" enctype="multipart/form-data" class="form-class x yz" action="/handle_post">
     <input type="text" name="username">
     <input type="number" style="background: red" name="num">
 
-    <!-- File input for uploading a photo -->
     <input type="file" name="photo">
 
     <input type="submit" value="Submit">
 </form>
+-->
+
+{% block content %}
+{% endblock content %}
 
 </body>
 </html>

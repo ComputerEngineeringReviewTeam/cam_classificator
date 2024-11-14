@@ -9,6 +9,7 @@ import dotenv
 
 __config = None
 
+
 class Config:
     def __init__(self):
         if not dotenv.load_dotenv():
@@ -22,6 +23,7 @@ class Config:
         if self.photo_dict is None:
             raise RuntimeError('Missing environment variable: PHOTO_DICT')
 
+        self.app_secret_key = os.getenv('SECRET_KEY') or 'one-ring-to-rule-them-all'
 
 
 def get_config() -> Config:
