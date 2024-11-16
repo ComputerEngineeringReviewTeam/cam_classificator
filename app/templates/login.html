@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/login" method="post">
+    <label for="key">Enter API key: </label>
+    <input type="password" id="key" name="key" required>
+    <br>
+    <input type="submit" value="Authenticate">
+</form>
+
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+{% endblock content %}

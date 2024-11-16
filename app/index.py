@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, redirect, jsonify, abort, url_for
-from bson import ObjectId
-import json
+from flask import Flask, render_template, request, redirect, url_for, session
+from functools import wraps
 
 from app.config.config import get_config
 from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
@@ -11,19 +10,50 @@ app = Flask(__name__)
 app.secret_key = get_config().app_secret_key
 
 
+def authenticated(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'authenticated' not in session:
+            return redirect(url_for('login'))
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('base.html')
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form['key'] == get_config().api_key:
+            session['authenticated'] = True
+            return redirect(url_for('view_all_data'))
+        else:
+            error_msg = 'Invalid password'
+        return render_template('login.html', error=error_msg)
+    return render_template('login.html')
+
+
+@app.route('/logout')
+@authenticated
+def logout():
+    session.pop('auth_key', None)
+    return redirect(url_for('index'))
+
+
 @app.route('/training_data')
+@authenticated
 def view_all_data():
     all_data = training_data_service.get_all().training_data
     return render_template('view_all_data.html', data=all_data)
 
 
 @app.route('/training_data/<_id>')
+@authenticated
 def view_datapoint(_id):
     datapoint = training_data_service.get(_id)
     if datapoint is None:
@@ -33,6 +63,7 @@ def view_datapoint(_id):
 
 
 @app.route('/training_data/new', methods=['GET', 'POST'])
+@authenticated
 def publish_new_training_data():
     form = TrainingDataForm()
     if request.method == 'POST' and form.validate_on_submit():
