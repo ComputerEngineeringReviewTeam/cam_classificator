@@ -5,11 +5,9 @@
 
 {% for datapoint in data %}
 <div>
-    <h3>Id: {{ datapoint.id }}</h3><br>
-    <span>Branching points: {{ datapoint.branching_points }}</span><br>
-    <span>Total length: {{ datapoint.total_length }}</span><br>
-    <span>Mean thickness: {{ datapoint.mean_thickness }}</span><br>
-    <span>Total area: {{ datapoint.total_area }}</span><br>
+    <h2>Id: {{ datapoint.id }}</h2>
+    <br>
+    <a href="{{ url_for('view_datapoint', _id=datapoint.id) }}">details</a>
     <br><br>
 </div>
 {% endfor %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Data uploaded successfully!</h1>
+<h2>Thank you for helping to build the dataset</h2>
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+{% endblock content %}
