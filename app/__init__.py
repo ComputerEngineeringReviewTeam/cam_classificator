@@ -14,8 +14,7 @@ _default.default = JSONEncoder().default
 JSONEncoder.default = _default
 
 
-def create_app():
-    app = Flask(__name__)
+def configure_app(app):
     app.secret_key = get_config().app_secret_key
 
     # Register blueprints
@@ -29,3 +28,11 @@ def create_app():
         return render_template('base.html')
 
     return app
+
+
+def create_app():
+    app = Flask(__name__)
+    return configure_app(app)
+
+
+app = Flask(__name__)
