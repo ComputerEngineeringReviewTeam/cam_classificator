@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>All available data</h1>
+
+{% for datapoint in data %}
+<div>
+    <h2>Id: {{ datapoint.id }}</h2>
+    <br>
+    <a href="{{ url_for('training_data_bp.view_datapoint', _id=datapoint.id) }}">details</a>
+    <br><br>
+</div>
+{% endfor %}
+
+{% endblock content %}
