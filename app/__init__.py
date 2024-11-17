@@ -3,6 +3,7 @@ from flask import Flask, render_template
 
 from app.config.config import get_config
 from app.domain.training_data.blueprints.training_data_bp import training_data_bp
+from app.domain.common.authentication.blueprints.authentication_bp import authentication_bp
 
 
 def _default(self, obj):
@@ -18,6 +19,7 @@ def configure_app(app):
 
     # Register blueprints
     app.register_blueprint(training_data_bp)
+    app.register_blueprint(authentication_bp)
 
     # Register top level routes
     @app.route('/')
