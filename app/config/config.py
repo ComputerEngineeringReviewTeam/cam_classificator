@@ -27,10 +27,6 @@ class Config:
         if self.app_secret_key is None:
             raise RuntimeError('Missing environment variable: SECRET_KEY')
 
-        self.api_key = os.getenv('API_KEY')
-        if self.api_key is None:
-            raise RuntimeError('Missing environment variable: API_KEY')
-
 
 def get_config() -> Config:
     global __config
