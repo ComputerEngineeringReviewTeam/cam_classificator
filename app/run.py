@@ -1,6 +1,6 @@
-from app import create_app
+from app import configure_app, app
 
-app = create_app()
+app = configure_app(app)
 
 if __name__ == '__main__':
     app.run()
