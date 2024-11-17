@@ -7,7 +7,7 @@
 <div>
     <h2>Id: {{ datapoint.id }}</h2>
     <br>
-    <a href="{{ url_for('view_datapoint', _id=datapoint.id) }}">details</a>
+    <a href="{{ url_for('training_data_bp.view_datapoint', _id=datapoint.id) }}">details</a>
     <br><br>
 </div>
 {% endfor %}

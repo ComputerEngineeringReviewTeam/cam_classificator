@@ -10,8 +10,10 @@
 
 <nav>
     <a href="/">Home</a>
-    <a href="{{ url_for('publish_new_training_data') }}">New Training data</a>
-    <a href="{{ url_for('view_all_data') }}">View data</a>
+    <br/>
+    <a href="{{ url_for('training_data_bp.publish_new_training_data') }}">New Training data</a>
+    <br/>
+    <a href="{{ url_for('training_data_bp.view_all_data') }}">View data</a>
 </nav>
 
 {% block content %}
