@@ -14,6 +14,13 @@
     <a href="{{ url_for('training_data_bp.view_new_datapoint_form') }}">New Training data</a>
     <br/>
     <a href="{{ url_for('training_data_bp.view_all_data') }}">View data</a>
+    {%  if 'authenticated' in session %}
+        <br/>
+        <a href="{{ url_for('authentication_bp.logout') }}">Logout</a>
+    {% else %}
+        <br/>
+        <a href="{{ url_for('authentication_bp.login') }}">Login</a>
+    {% endif %}
 </nav>
 
 {% block content %}

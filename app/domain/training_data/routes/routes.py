@@ -1,18 +1,22 @@
-from flask import render_template, request, redirect, jsonify, abort, url_for
+from flask import render_template
 
 from app.domain.training_data.blueprints.training_data_bp import training_data_bp
 from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
 from app.domain.training_data.services import training_data_service
 from app.domain.training_data.forms.training_data_form import TrainingDataForm
 
+from app.domain.common.authentication.decorators.logged_in import logged_in
+
 
 @training_data_bp.route('/all', methods=['GET'])
+@logged_in
 def view_all_data():
     all_data = training_data_service.get_all().training_data
     return render_template('view_all_data.html', data=all_data)
 
 
 @training_data_bp.route('/<_id>', methods=['GET'])
+@logged_in
 def view_datapoint(_id):
     datapoint = training_data_service.get(_id)
     if datapoint is None:
@@ -22,12 +26,14 @@ def view_datapoint(_id):
 
 
 @training_data_bp.route('/new', methods=['GET'])
+@logged_in
 def view_new_datapoint_form():
     form = TrainingDataForm()
     return render_template("new_datapoint_form.html", form=form)
 
 
 @training_data_bp.route('/new', methods=['POST'])
+@logged_in
 def publish_new_datapoint_form():
     form = TrainingDataForm()
     if form.validate_on_submit():
