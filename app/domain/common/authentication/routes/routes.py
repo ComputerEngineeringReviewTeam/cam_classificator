@@ -24,7 +24,7 @@ def login():
     return render_template('login.html', form=form, error=error)
 
 
-@authentication_bp.route('/logout', methods=['GET'])
+@authentication_bp.route('/logout', methods=['POST'])
 def logout():
     session.pop('authenticated', None)
     return redirect(url_for('index'))
