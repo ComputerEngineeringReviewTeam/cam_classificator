@@ -22,13 +22,13 @@ def view_datapoint(_id):
 
 
 @training_data_bp.route('/new', methods=['GET'])
-def publish_new_training_data():
+def view_new_datapoint_form():
     form = TrainingDataForm()
-    return render_template("training_data_form.html", form=form)
+    return render_template("new_datapoint_form.html", form=form)
 
 
 @training_data_bp.route('/new', methods=['POST'])
-def handle_form():
+def publish_new_datapoint_form():
     form = TrainingDataForm()
     if form.validate_on_submit():
         data = CreateTrainingDataCommand()
@@ -42,4 +42,4 @@ def handle_form():
         training_data_service.create(data, photo)
 
         return render_template('upload_success.html')
-    return render_template("training_data_form.html", form=form)
+    return render_template("new_datapoint_form.html", form=form)
