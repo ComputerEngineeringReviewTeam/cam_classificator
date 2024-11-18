@@ -8,9 +8,7 @@ WORKDIR /app
 COPY . /app
 RUN pip install --no-cache-dir -r /app/app/requirements.txt
 
-
 EXPOSE ${SERVER_PORT}
 
 ENTRYPOINT ["python"]
-
 CMD ["/app/run.py"]
