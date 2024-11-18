@@ -15,6 +15,25 @@ class Config:
         if not dotenv.load_dotenv():
             raise Exception('.env file not found')
 
+        debug = os.getenv('DEBUG')
+        if debug is None:
+            raise RuntimeError('Missing environment variable: DEBUG')
+
+        if str.lower(debug) == 'true':
+            self.debug = True
+        elif str.lower(debug) == 'false':
+            self.debug = False
+        else:
+            raise RuntimeError(f'Invalid environment variable value: DEBUG={debug}')
+
+        self.server_host = os.getenv('SERVER_HOST')
+        if self.server_host is None:
+            raise RuntimeError('Missing environment variable: SERVER_HOST')
+
+        self.server_port = os.getenv('SERVER_PORT')
+        if self.server_port is None:
+            raise RuntimeError('Missing environment variable: SERVER_PORT')
+
         self.mongo_url = os.getenv('MONGO_URL')
         if self.mongo_url is None:
             raise RuntimeError('Missing environment variable: MONGO_URL')
