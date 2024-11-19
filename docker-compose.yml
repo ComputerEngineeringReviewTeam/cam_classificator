@@ -1,0 +1,30 @@
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:8.0.3
+    restart: always
+    ports:
+      - '27017:27017'
+    networks:
+      - cam_classificator_network
+    volumes:
+      - ${MONGO_VOLUME_PATH}:/data/db
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    container_name: cam-classificator
+    restart: always
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - cam_classificator_network
+    volumes:
+      - ./:/app
+
+
+networks:
+  cam_classificator_network:
