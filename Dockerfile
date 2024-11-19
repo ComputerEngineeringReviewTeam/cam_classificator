@@ -5,11 +5,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY app/requirements.txt /app/
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
 COPY . /app
+RUN pip install --no-cache-dir -r /app/app/requirements.txt
 
-EXPOSE 5000
+EXPOSE ${SERVER_PORT}
 
-CMD ["python", "/app/main.py"]
+ENTRYPOINT ["python"]
+CMD ["/app/run.py"]
