@@ -24,7 +24,9 @@ services:
       - cam_classificator_network
     volumes:
       - ./:/app
+      - ${PHOTO_DICT}:${DOCKER_PHOTO_DICT}
 
 
 networks:
   cam_classificator_network:
+ 
