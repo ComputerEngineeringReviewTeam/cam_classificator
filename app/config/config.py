@@ -12,8 +12,9 @@ __config = None
 
 class Config:
     def __init__(self):
-        if not dotenv.load_dotenv():
-            raise Exception('.env file not found')
+        # uncomment when running not by docker compose
+        # if not dotenv.load_dotenv():
+        #     raise Exception('.env file not found')
 
         debug = os.getenv('DEBUG')
         if debug is None:

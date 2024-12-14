@@ -6,6 +6,7 @@
 {% for datapoint in data %}
 <div>
     <h2>Id: {{ datapoint.id }}</h2>
+    <span>Created at: {{ datapoint.created_at }}</span>
     <br>
     <a href="{{ url_for('training_data_bp.view_datapoint', _id=datapoint.id) }}">details</a>
     <br><br>
