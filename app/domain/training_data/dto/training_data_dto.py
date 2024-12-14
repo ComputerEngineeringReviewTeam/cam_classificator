@@ -19,7 +19,7 @@ class TrainingDataDTO:
     def __json__(self):
         return {
             'id': self.id.__str__(),
-            'timestamp': self.created_at.__str__(),
+            'created_at': self.created_at.__str__(),
             'branching_points': self.branching_points,
             'total_length': self.total_length,
             'mean_thickness': self.mean_thickness,
