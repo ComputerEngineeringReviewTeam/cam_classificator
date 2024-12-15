@@ -14,6 +14,7 @@ class TrainingDataDTO:
         self.total_length: float|None = None
         self.mean_thickness: float|None = None
         self.total_area: float|None = None
+        self.photo_type: str|None = None
 
 
     def __json__(self):
@@ -23,5 +24,6 @@ class TrainingDataDTO:
             'branching_points': self.branching_points,
             'total_length': self.total_length,
             'mean_thickness': self.mean_thickness,
-            'total_area': self.total_area
+            'total_area': self.total_area,
+            'photo_type': self.photo_type,
         }

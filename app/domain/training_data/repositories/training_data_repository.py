@@ -27,6 +27,7 @@ def get(id: ObjectId) -> TrainingDataDTO|None:
     result.total_length = document['total_length']
     result.mean_thickness = document['mean_thickness']
     result.total_area = document['total_area']
+    result.photo_type = document['photo_type']
 
     return result
 
@@ -42,6 +43,7 @@ def get_all() -> AllTrainingDataDTO:
         result.total_length = document['total_length']
         result.mean_thickness = document['mean_thickness']
         result.total_area = document['total_area']
+        result.photo_type = document['photo_type']
 
         results.training_data.append(result)
 

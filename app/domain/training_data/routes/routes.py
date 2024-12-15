@@ -45,9 +45,7 @@ def publish_new_datapoint_form():
         data.set_branching_points(form.branching_points.data)
 
         photo = form.photo.data
-
-        if photo.filename.split(".")[-1] != 'png':
-            return render_template('400.html', message='Only PNG photos are accepted'), 400
+        data.set_photo_type(photo.filename.split(".")[-1])
 
         training_data_service.create(data, photo)
 
