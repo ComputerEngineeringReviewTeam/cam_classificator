@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutLink.addEventListener('click', event => {
         event.preventDefault();
-        fetch('/auth/logout', {method: 'POST'})
+        fetch('/cam/auth/logout', {method: 'POST'})
             .then(r => {
                 if (r.redirected) {
                     console.log('Logged out')

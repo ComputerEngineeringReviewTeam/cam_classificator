@@ -1,5 +1,6 @@
-from flask import render_template
+from flask import render_template, send_from_directory
 
+from app import get_config
 from app.domain.training_data.blueprints.training_data_bp import training_data_bp
 from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
 from app.domain.training_data.services import training_data_service
@@ -44,8 +45,15 @@ def publish_new_datapoint_form():
         data.set_branching_points(form.branching_points.data)
 
         photo = form.photo.data
+        data.set_photo_type(photo.filename.split(".")[-1])
 
         training_data_service.create(data, photo)
 
         return render_template('upload_success.html')
     return render_template("new_datapoint_form.html", form=form)
+
+
+@training_data_bp.route('/photos/<_photo_filename>', methods=['GET'])
+@logged_in
+def view_photo(_photo_filename):
+    return send_from_directory(get_config().photo_dict, f'{_photo_filename}')

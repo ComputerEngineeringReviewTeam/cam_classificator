@@ -2,7 +2,7 @@ from flask import Blueprint
 
 authentication_bp = Blueprint(name='authentication_bp',
                               import_name=__name__,
-                              url_prefix='/auth',
+                              url_prefix='/cam/auth',
                               template_folder='../templates',
                               static_folder='../static')
 

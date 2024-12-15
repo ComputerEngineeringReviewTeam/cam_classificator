@@ -6,7 +6,6 @@ import os
 
 from bson import ObjectId
 from werkzeug.datastructures import FileStorage
-from werkzeug.utils import secure_filename
 
 from app.config.config import get_config
 from app.domain.common.mongodb.mongo import get_mongo
@@ -23,10 +22,12 @@ def get(id: ObjectId) -> TrainingDataDTO|None:
 
     result = TrainingDataDTO()
     result.id = document['_id']
+    result.created_at = result.id.generation_time
     result.branching_points = document['branching_points']
     result.total_length = document['total_length']
     result.mean_thickness = document['mean_thickness']
     result.total_area = document['total_area']
+    result.photo_type = document['photo_type']
 
     return result
 
@@ -37,10 +38,12 @@ def get_all() -> AllTrainingDataDTO:
     for document in documents:
         result = TrainingDataDTO()
         result.id = document['_id']
+        result.created_at = result.id.generation_time
         result.branching_points = document['branching_points']
         result.total_length = document['total_length']
         result.mean_thickness = document['mean_thickness']
         result.total_area = document['total_area']
+        result.photo_type = document['photo_type']
 
         results.training_data.append(result)
 

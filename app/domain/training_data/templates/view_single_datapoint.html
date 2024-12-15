@@ -3,6 +3,7 @@
 {% block content %}
 <article>
     <h1>Id: {{ datapoint.id }}</h1>
+    <span>Created at: {{ datapoint.created_at }}</span>
     <br/>
     <span>Total area: {{ datapoint.total_area }}</span>
     <br/>
@@ -11,5 +12,8 @@
     <span>Mean thickness: {{ datapoint.mean_thickness }}</span>
     <br/>
     <span>Branching points: {{ datapoint.branching_points }}</span>
+    <br/>
+    <br/>
+    <img src="/cam/training_data/photos/{{ datapoint.id }}.{{ datapoint.photo_type }}" alt="The photo placeholder"/>
 </article>
 {% endblock content %}

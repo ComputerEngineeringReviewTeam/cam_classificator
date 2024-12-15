@@ -16,14 +16,13 @@ JSONEncoder.default = _default
 
 def configure_app(app):
     app.secret_key = get_config().app_secret_key
-
     # Register blueprints
     app.register_blueprint(training_data_bp)
     app.register_blueprint(authentication_bp)
 
     # Register top level routes
-    @app.route('/')
-    @app.route('/index')
+    @app.route('/cam')
+    @app.route('/cam/index')
     def index():
         return render_template('base.html')
 
