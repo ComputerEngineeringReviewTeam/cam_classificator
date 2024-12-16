@@ -18,12 +18,12 @@ services:
     container_name: cam-classificator
     restart: always
     ports:
-      - "8080:8080"
+      - "8080:80"
     environment:
       DEBUG: false
       MONGO_URL: mongodb:27017
       SERVER_HOST: 0.0.0.0
-      SERVER_PORT: 8080
+      SERVER_PORT: 80
       PHOTO_DICT: /photos
 
       SECRET_KEY: 123
@@ -33,7 +33,6 @@ services:
     volumes:
       - ./:/app
       - ../photos:/photos
-
 
 networks:
   cam_classificator_network:
