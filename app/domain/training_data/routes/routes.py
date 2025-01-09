@@ -13,7 +13,8 @@ from app.domain.common.authentication.decorators.logged_in import logged_in
 @logged_in
 def view_all_data():
     all_data = training_data_service.get_all().training_data
-    return render_template('view_all_data.html', data=all_data)
+    sorted_data = sorted(all_data, key=lambda d: d.created_at, reverse=True)
+    return render_template('view_all_data.html', data=sorted_data)
 
 
 @training_data_bp.route('/<_id>', methods=['GET'])
@@ -43,6 +44,7 @@ def publish_new_datapoint_form():
         data.set_total_length(form.total_length.data)
         data.set_mean_thickness(form.mean_thickness.data)
         data.set_branching_points(form.branching_points.data)
+        # data.set_is_good(form.is_good.data)
 
         photo = form.photo.data
         data.set_photo_type(photo.filename.split(".")[-1])
@@ -57,3 +59,12 @@ def publish_new_datapoint_form():
 @logged_in
 def view_photo(_photo_filename):
     return send_from_directory(get_config().photo_dict, f'{_photo_filename}')
+
+@training_data_bp.route('/<_id>', methods=['DELETE'])
+@logged_in
+def delete_photo(_id):
+    success = training_data_service.delete(_id)
+    if success:
+        return '', 204
+    else:
+        return '', 404
