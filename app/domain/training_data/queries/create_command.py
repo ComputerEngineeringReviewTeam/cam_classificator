@@ -45,3 +45,4 @@ class CreateTrainingDataCommand:
 
     def set_is_good(self, is_good: bool):
         self._is_good = is_good
+        return self
