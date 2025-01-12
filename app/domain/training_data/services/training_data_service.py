@@ -35,4 +35,5 @@ def update(command: UpdateTrainingDataCommand) -> bool:
 
 
 def delete(id: ObjectId) -> bool:
+    training_data_repository.delete_photo(id)
     return training_data_repository.delete(id)

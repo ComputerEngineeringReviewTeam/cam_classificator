@@ -14,6 +14,7 @@ class TrainingDataDTO:
         self.total_length: float|None = None
         self.mean_thickness: float|None = None
         self.total_area: float|None = None
+        self.is_good: bool|None = None
         self.photo_type: str|None = None
 
 
@@ -25,5 +26,6 @@ class TrainingDataDTO:
             'total_length': self.total_length,
             'mean_thickness': self.mean_thickness,
             'total_area': self.total_area,
+            'is_good': self.is_good,
             'photo_type': self.photo_type,
         }
