@@ -22,7 +22,9 @@ def configure_app(app):
 
     # Register top level routes
     @app.route('/cam')
+    @app.route('/cam/')
     @app.route('/cam/index')
+    @app.route('/cam/index/')
     def index():
         return render_template('base.html')
 

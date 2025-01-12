@@ -5,6 +5,8 @@
     <h1>Id: {{ datapoint.id }}</h1>
     <span>Created at: {{ datapoint.created_at }}</span>
     <br/>
+    <a href="#" onclick="sendDeleteRequest('{{ datapoint.id }}')">Delete</a>
+    <br/>
     <span>Total area: {{ datapoint.total_area }}</span>
     <br/>
     <span>Total length: {{ datapoint.total_length }}</span>
@@ -12,6 +14,8 @@
     <span>Mean thickness: {{ datapoint.mean_thickness }}</span>
     <br/>
     <span>Branching points: {{ datapoint.branching_points }}</span>
+    <br/>
+    <span>Is the tissue good: {{ datapoint.is_good }}</span>
     <br/>
     <br/>
     <img src="/cam/training_data/photos/{{ datapoint.id }}.{{ datapoint.photo_type }}" alt="The photo placeholder"/>

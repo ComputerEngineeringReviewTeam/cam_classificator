@@ -3,6 +3,7 @@ About: Repository for training data
 Author: Paweł Bogdanowicz
 """
 import os
+from importlib.metadata import pass_none
 
 from bson import ObjectId
 from werkzeug.datastructures import FileStorage
@@ -16,18 +17,19 @@ from app.domain.training_data.queries.update_command import UpdateTrainingDataCo
 
 
 def get(id: ObjectId) -> TrainingDataDTO|None:
-    document = get_mongo().training_data.find_one({'_id': ObjectId(id)})
+    document = get_mongo().training_data.find_one({'_id': id})
     if document is None:
         return None
 
     result = TrainingDataDTO()
-    result.id = document['_id']
+    result.id = document.get('_id')
     result.created_at = result.id.generation_time
-    result.branching_points = document['branching_points']
-    result.total_length = document['total_length']
-    result.mean_thickness = document['mean_thickness']
-    result.total_area = document['total_area']
-    result.photo_type = document['photo_type']
+    result.branching_points = document.get('branching_points')
+    result.total_length = document.get('total_length')
+    result.mean_thickness = document.get('mean_thickness')
+    result.total_area = document.get('total_area')
+    result.is_good = document.get('is_good')
+    result.photo_type = document.get('photo_type')
 
     return result
 
@@ -37,13 +39,14 @@ def get_all() -> AllTrainingDataDTO:
 
     for document in documents:
         result = TrainingDataDTO()
-        result.id = document['_id']
+        result.id = document.get('_id')
         result.created_at = result.id.generation_time
-        result.branching_points = document['branching_points']
-        result.total_length = document['total_length']
-        result.mean_thickness = document['mean_thickness']
-        result.total_area = document['total_area']
-        result.photo_type = document['photo_type']
+        result.branching_points = document.get('branching_points')
+        result.total_length = document.get('total_length')
+        result.mean_thickness = document.get('mean_thickness')
+        result.total_area = document.get('total_area')
+        result.is_good = document.get('is_good')
+        result.photo_type = document.get('photo_type')
 
         results.training_data.append(result)
 
@@ -60,6 +63,19 @@ def save_photo(photo: FileStorage, id: ObjectId):
 
     filename = f'{id.__str__()}.{photo.filename.split(".")[-1]}'
     photo.save(os.path.join(get_config().photo_dict, filename))
+
+
+def delete_photo(id: ObjectId):
+    photo_data = get(id)
+    if photo_data is None:
+        return
+
+    filename = f'{id}.{photo_data.photo_type}'
+    try:
+        os.remove(os.path.join(get_config().photo_dict, filename))
+    except FileNotFoundError:
+        pass
+    return
 
 
 def update(command: UpdateTrainingDataCommand) -> bool:

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <script src="{{ url_for('authentication_bp.static', filename='js/logout_request.js') }}"></script>
+    <script src="{{ url_for('training_data_bp.static', filename='js/delete_request.js') }}"></script>
 </head>
 <body>
 
@@ -17,7 +18,7 @@
     <a href="{{ url_for('training_data_bp.view_all_data') }}">View data</a>
     {%  if 'authenticated' in session %}
         <br/>
-        <a href="#" id="logout-link">Logout</a>
+        <a href="#" onclick="logoutRequest()">Logout</a>
     {% else %}
         <br/>
         <a href="{{ url_for('authentication_bp.login') }}">Login</a>
