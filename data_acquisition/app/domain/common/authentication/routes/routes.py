@@ -1,8 +1,8 @@
 from flask import render_template, session, redirect, url_for
 
-from app.config.config import get_config
-from app.domain.common.authentication.blueprints.authentication_bp import authentication_bp
-from app.domain.common.authentication.forms.login_form import LoginForm
+from data_acquisition.app.config.config import get_config
+from data_acquisition.app.domain.common.authentication.blueprints.authentication_bp import authentication_bp
+from data_acquisition.app.domain.common.authentication.forms.login_form import LoginForm
 
 
 @authentication_bp.route('/login', methods=['GET'])

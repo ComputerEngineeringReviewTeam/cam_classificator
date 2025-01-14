@@ -1,13 +1,13 @@
 from bson import ObjectId
 from flask import render_template, send_from_directory
 
-from app import get_config
-from app.domain.training_data.blueprints.training_data_bp import training_data_bp
-from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
-from app.domain.training_data.services import training_data_service
-from app.domain.training_data.forms.training_data_form import TrainingDataForm
+from data_acquisition.app import get_config
+from data_acquisition.app.domain.training_data.blueprints.training_data_bp import training_data_bp
+from data_acquisition.app.domain.training_data.queries.create_command import CreateTrainingDataCommand
+from data_acquisition.app.domain.training_data.services import training_data_service
+from data_acquisition.app.domain.training_data.forms.training_data_form import TrainingDataForm
 
-from app.domain.common.authentication.decorators.logged_in import logged_in
+from data_acquisition.app.domain.common.authentication.decorators.logged_in import logged_in
 
 
 @training_data_bp.route('/all/', methods=['GET'])

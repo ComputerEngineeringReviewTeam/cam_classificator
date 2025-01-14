@@ -6,4 +6,4 @@ training_data_bp = Blueprint(name='training_data_bp',
                              template_folder='../templates',
                              static_folder='../static')
 
-from app.domain.training_data.routes import routes
+from data_acquisition.app.domain.training_data.routes import routes

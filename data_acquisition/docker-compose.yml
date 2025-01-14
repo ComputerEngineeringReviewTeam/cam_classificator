@@ -8,7 +8,7 @@ services:
     networks:
       - cam_classificator_network
     volumes:
-      - ../data:/data/db
+      - ./data:/data/db
   web:
     build:
       context: .
@@ -28,11 +28,13 @@ services:
 
       SECRET_KEY: 123
       API_KEY: 456
+
+      SESSION_LIFETIME_DAYS: 30
     networks:
       - cam_classificator_network
     volumes:
       - ./:/app
-      - ../photos:/photos
+      - ./photos:/photos
 
 networks:
   cam_classificator_network:

@@ -3,7 +3,7 @@ About: A DTO object for transporting training data
 Author: Paweł Bogdanowicz
 """
 
-from app.domain.training_data.dto.training_data_dto import TrainingDataDTO
+from data_acquisition.app.domain.training_data.dto.training_data_dto import TrainingDataDTO
 
 
 class AllTrainingDataDTO:

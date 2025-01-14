@@ -2,9 +2,9 @@ from json import JSONEncoder
 from flask import Flask, render_template
 from datetime import timedelta
 
-from app.config.config import get_config
-from app.domain.training_data.blueprints.training_data_bp import training_data_bp
-from app.domain.common.authentication.blueprints.authentication_bp import authentication_bp
+from data_acquisition.app.config.config import get_config
+from data_acquisition.app.domain.training_data.blueprints.training_data_bp import training_data_bp
+from data_acquisition.app.domain.common.authentication.blueprints.authentication_bp import authentication_bp
 
 
 def _default(self, obj):
@@ -15,7 +15,7 @@ _default.default = JSONEncoder().default
 JSONEncoder.default = _default
 
 
-def configure_app(app):
+def configure_app(app: Flask):
     app.secret_key = get_config().app_secret_key
     # Register blueprints
     app.register_blueprint(training_data_bp)

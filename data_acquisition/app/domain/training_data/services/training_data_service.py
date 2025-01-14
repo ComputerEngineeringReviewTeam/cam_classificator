@@ -6,11 +6,11 @@ Author: Paweł Bogdanowicz
 from bson import ObjectId
 from werkzeug.datastructures import FileStorage
 
-from app.domain.training_data.dto.all_training_data_dto import AllTrainingDataDTO
-from app.domain.training_data.dto.training_data_dto import TrainingDataDTO
-from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
-from app.domain.training_data.queries.update_command import UpdateTrainingDataCommand
-from app.domain.training_data.repositories import training_data_repository
+from data_acquisition.app.domain.training_data.dto.all_training_data_dto import AllTrainingDataDTO
+from data_acquisition.app.domain.training_data.dto.training_data_dto import TrainingDataDTO
+from data_acquisition.app.domain.training_data.queries.create_command import CreateTrainingDataCommand
+from data_acquisition.app.domain.training_data.queries.update_command import UpdateTrainingDataCommand
+from data_acquisition.app.domain.training_data.repositories import training_data_repository
 
 
 def get(id: ObjectId) -> TrainingDataDTO|None:

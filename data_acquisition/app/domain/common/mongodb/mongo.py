@@ -3,7 +3,7 @@ About: MongoDB connection singleton object.
 Author: Paweł Bogdanowicz
 """
 
-from app.config.config import get_config
+from data_acquisition.app.config.config import get_config
 from pymongo import MongoClient
 
 __mongo_db = None

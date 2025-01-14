@@ -6,4 +6,4 @@ authentication_bp = Blueprint(name='authentication_bp',
                               template_folder='../templates',
                               static_folder='../static')
 
-from app.domain.common.authentication.routes import routes
+from data_acquisition.app.domain.common.authentication.routes import routes

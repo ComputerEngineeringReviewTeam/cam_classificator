@@ -3,17 +3,16 @@ About: Repository for training data
 Author: Paweł Bogdanowicz
 """
 import os
-from importlib.metadata import pass_none
 
 from bson import ObjectId
 from werkzeug.datastructures import FileStorage
 
-from app.config.config import get_config
-from app.domain.common.mongodb.mongo import get_mongo
-from app.domain.training_data.dto.all_training_data_dto import AllTrainingDataDTO
-from app.domain.training_data.dto.training_data_dto import TrainingDataDTO
-from app.domain.training_data.queries.create_command import CreateTrainingDataCommand
-from app.domain.training_data.queries.update_command import UpdateTrainingDataCommand
+from data_acquisition.app.config.config import get_config
+from data_acquisition.app.domain.common.mongodb.mongo import get_mongo
+from data_acquisition.app.domain.training_data.dto.all_training_data_dto import AllTrainingDataDTO
+from data_acquisition.app.domain.training_data.dto.training_data_dto import TrainingDataDTO
+from data_acquisition.app.domain.training_data.queries.create_command import CreateTrainingDataCommand
+from data_acquisition.app.domain.training_data.queries.update_command import UpdateTrainingDataCommand
 
 
 def get(id: ObjectId) -> TrainingDataDTO|None:
