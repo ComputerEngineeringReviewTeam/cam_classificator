@@ -7,17 +7,19 @@
     <br/>
     <a href="#" onclick="sendDeleteRequest('{{ datapoint.id }}')">Delete</a>
     <br/>
-    <span>Total area: {{ datapoint.total_area }}</span>
+    <span>Total area: {{ datapoint.total_area or 'N/a' }}</span>
     <br/>
-    <span>Total length: {{ datapoint.total_length }}</span>
+    <span>Total length: {{ datapoint.total_length or 'N/a' }}</span>
     <br/>
-    <span>Mean thickness: {{ datapoint.mean_thickness }}</span>
+    <span>Mean thickness: {{ datapoint.mean_thickness or 'N/a' }}</span>
     <br/>
-    <span>Branching points: {{ datapoint.branching_points }}</span>
+    <span>Branching points: {{ datapoint.branching_points or 'N/a' }}</span>
     <br/>
-    <span>Is the tissue good: {{ datapoint.is_good }}</span>
+    <span>Is the tissue good: {{ datapoint.is_good or 'N/a' }}</span>
     <br/>
     <br/>
     <img src="/cam/training_data/photos/{{ datapoint.id }}.{{ datapoint.photo_type }}" alt="The photo placeholder"/>
+    <br/>
+    <span>Photo scale: {{ datapoint.scale or 'N/a' }}</span>
 </article>
 {% endblock content %}

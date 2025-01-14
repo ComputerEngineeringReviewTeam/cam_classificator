@@ -14,6 +14,7 @@ class UpdateTrainingDataCommand:
         self._mean_thickness: float|None = None
         self._total_area: float|None = None
         self._is_good: bool|None = None
+        self._scale: int|None = None
         self._photo_type: str|None = None
 
     def to_mongo_json(self) -> dict:
@@ -23,6 +24,7 @@ class UpdateTrainingDataCommand:
             'mean_thickness': self._mean_thickness,
             'total_area': self._total_area,
             'is_good': self._is_good,
+            'scale': self._scale,
             'photo_type': self._photo_type,
         }
 
@@ -55,4 +57,8 @@ class UpdateTrainingDataCommand:
 
     def set_is_good(self, is_good: bool):
         self._is_good = is_good
+        return self
+
+    def set_scale(self, scale: int):
+        self._scale = scale
         return self

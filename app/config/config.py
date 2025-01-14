@@ -52,7 +52,6 @@ class Config:
         if self.api_key is None:
             raise RuntimeError('Missing environment variable: API_KEY')
 
-
 def get_config() -> Config:
     global __config
     if __config is None:

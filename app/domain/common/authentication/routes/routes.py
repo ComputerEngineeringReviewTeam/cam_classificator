@@ -18,6 +18,7 @@ def login():
     if form.validate_on_submit():
         if form.key.data == get_config().api_key:
             session['authenticated'] = True
+            session.permanent = True
             return redirect(url_for('index'))
 
         error = 'Invalid key'

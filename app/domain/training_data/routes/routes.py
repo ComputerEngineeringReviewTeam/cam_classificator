@@ -49,6 +49,7 @@ def publish_new_datapoint_form():
         data.set_total_length(form.total_length.data)
         data.set_mean_thickness(form.mean_thickness.data)
         data.set_branching_points(form.branching_points.data)
+        data.set_scale(form.scale.data)
         data.set_is_good(form.is_good.data)
 
         photo = form.photo.data
