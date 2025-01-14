@@ -1,5 +1,6 @@
 from json import JSONEncoder
 from flask import Flask, render_template
+from datetime import timedelta
 
 from app.config.config import get_config
 from app.domain.training_data.blueprints.training_data_bp import training_data_bp
@@ -19,6 +20,11 @@ def configure_app(app):
     # Register blueprints
     app.register_blueprint(training_data_bp)
     app.register_blueprint(authentication_bp)
+
+    # Set session lifetime
+    session_lifetime_days = int(get_config().session_lifetime)
+    app.permanent_session_lifetime = timedelta(days=session_lifetime_days)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=session_lifetime_days)
 
     # Register top level routes
     @app.route('/cam')
