@@ -22,7 +22,7 @@ def configure_app(app: Flask):
     app.register_blueprint(authentication_bp)
 
     # Set session lifetime
-    session_lifetime_days = int(get_config().session_lifetime)
+    session_lifetime_days = 180
     app.permanent_session_lifetime = timedelta(days=session_lifetime_days)
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=session_lifetime_days)
 

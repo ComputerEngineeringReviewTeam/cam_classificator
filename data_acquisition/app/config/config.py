@@ -52,10 +52,6 @@ class Config:
         if self.api_key is None:
             raise RuntimeError('Missing environment variable: API_KEY')
 
-        self.session_lifetime = os.getenv('SESSION_LIFETIME_DAYS')
-        if self.session_lifetime is None:
-            raise RuntimeError('Missing environment variable: SESSION_LIFETIME_DAYS')
-
 
 def get_config() -> Config:
     global __config
