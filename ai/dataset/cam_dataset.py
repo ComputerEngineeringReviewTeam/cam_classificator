@@ -2,16 +2,14 @@ import os
 import torch
 from torch.utils.data import Dataset
 from torchvision.io import read_image
-import pandas as pd
-from pandas import DataFrame
+from pandas import read_csv, DataFrame
 
 
 class CamDataset(Dataset):
-    def __init__(self, labels_file_path: str, img_dir: str, transform=None, target_transform=None):
-        self.labels = pd.read_csv(labels_file_path)
+    def __init__(self, labels_file_path: str, img_dir: str, transform=None):
+        self.labels = read_csv(labels_file_path)
         self.img_dir = img_dir
         self.transform = transform
-        self.target_transform = target_transform
 
     def __len__(self):
         return len(self.labels)
@@ -28,11 +26,9 @@ class CamDataset(Dataset):
                 data['is_good'],             # maybe handle this one differently
             ],
             dtype=torch.float32)
+        scale = torch.tensor(data['scale'], dtype=torch.float32)
 
         if self.transform:
             image = self.transform(image)
 
-        if self.target_transform:
-            label = self.target_transform(label)
-
-        return image, label
+        return (image, scale), label
