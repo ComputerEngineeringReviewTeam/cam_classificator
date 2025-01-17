@@ -1,0 +1,8 @@
+../.idea
+.code
+**/__pycache__/**
+./photos/
+./data/
+.env
+.venv
+
