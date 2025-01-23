@@ -7,8 +7,7 @@ from urllib.parse import urljoin
 
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
 # BASE_URL = "http://127.0.0.1:5000/cam"
-# SAVE_DIR = f"./data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
-SAVE_DIR = f"./data/scraped/"
+SAVE_DIR = f"./data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
 
 session = requests.Session()
 
@@ -28,7 +27,6 @@ def fetch_data() -> dict:
         id_end = all_response.text.find('</h2>', id_index)
         data_id = all_response.text[id_index + len('Id: '):id_end]
 
-        # Fetching datapoint details
         result[data_id] = fetch_datapoint(data_id)
     return result
 
@@ -91,7 +89,7 @@ def login(key: str) -> bool:
     return True
 
 
-def download_photos(data_ids: list) -> None:
+def download_photos(data_ids) -> None:
     """
     Download photos from the website and save them to the photo directory.
     """
@@ -112,10 +110,6 @@ def download_photos(data_ids: list) -> None:
 
 
 def main():
-    """
-    Main function to fetch data from a URL, extract photo URLs, and download them.
-    """
-    # Ensure the save directory exists
     os.makedirs(SAVE_DIR + 'photos/', exist_ok=True)
 
     try:
@@ -128,15 +122,12 @@ def main():
         print('\n\nERROR: Authentication failed')
         return
 
-    print('Loged in. Starting downloading data...\n')
-    # Fetch data from the base URL
+    print('Logged in. Starting downloading data...\n')
     data = fetch_data()
     with open(SAVE_DIR + 'data.json', 'w') as file:
         json.dump(data, file, indent=4)
 
     print('Downloaded data. Starting downloading photos...\n')
-
-    # Extract photo URLs and download each photo
     download_photos(data.keys())
 
 
