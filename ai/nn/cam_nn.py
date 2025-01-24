@@ -2,10 +2,11 @@ from torchvision.transforms import Resize, ToTensor, Compose
 from torch.utils.data import DataLoader
 from torchmetrics import Accuracy
 
+from ai.dataset.cam_label import JsonLabelLoader
 from ai.nn.config import *
-from ai.dataset.cam_dataset import StructuredCamDataset
 from ai.nn.camnet import CamNet
 from ai.nn.custom_loss import CustomLoss
+from ai.dataset.cam_functional import train_test_datasets
 
 
 def train(model, device, loss_fn, dataloader, optimizer, epochs):
@@ -29,12 +30,15 @@ def test(model, device, dataloader, metric):
 
 
 if __name__ == '__main__':
-    tsfms = Compose([
+    tsfms = Compose([           # No need to use the ToTensor() transform as the image is already a tensor
         Resize(*TARGET_SIZE),
-        ToTensor()
     ])
-    train_dataset = StructuredCamDataset(ROOT_DIR, tsfms, train=True)                   # Datasets for train
-    test_dataset = StructuredCamDataset(ROOT_DIR, tsfms, train=False)                   # and test data
+
+    label_loader = JsonLabelLoader()
+    train_dataset, test_dataset = train_test_datasets(all_labels=label_loader.load(LABELS_PATH),
+                                                      img_dir=IMG_DIR,
+                                                      train_fraction=TRAIN_FRACTION,
+                                                      transform=tsfms)
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=False)      # Configured DataLoader for loading
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)        # train and test data in batches
