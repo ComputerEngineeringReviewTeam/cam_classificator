@@ -6,7 +6,7 @@ from ai.dataset.cam_label import JsonLabelLoader
 from ai.nn.config import *
 from ai.nn.camnet import CamNet
 from ai.nn.custom_loss import CustomLoss
-from ai.dataset.cam_functional import train_test_datasets
+from ai.dataset.dataset_helpers import train_test_datasets
 
 
 def train(model, device, loss_fn, dataloader, optimizer, epochs):
