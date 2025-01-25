@@ -11,7 +11,7 @@ from ai.dataset.dataset_helpers import train_test_datasets
 
 
 def train(model: torch.nn.Module, device: str, loss_fn: torch.nn.Module, dataloader: DataLoader,
-          optimizer: torch.optim.optimizer.Optimizer, epochs: int):
+          optimizer: torch.optim.Optimizer, epochs: int):
     for epoch in range(epochs):
 
         for i, ((image, scale), label) in enumerate(dataloader):
@@ -33,8 +33,8 @@ def test(model: torch.nn.Module, device: str, dataloader: DataLoader, metric: to
 
 
 if __name__ == '__main__':
-    tsfms = transforms.Compose([           
-        transforms.Resize(*TARGET_SIZE),
+    tsfms = transforms.Compose([
+        transforms.Resize(TARGET_SIZE),
     ])
 
     label_loader = JsonLabelLoader()  # Loads data from JSON file

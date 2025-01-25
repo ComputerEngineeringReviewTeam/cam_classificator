@@ -11,7 +11,7 @@ TRAIN_FRACTION = 0.8
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Training config
-TRAIN = False
+TRAIN = True
 LEARNING_RATE = 1e-3
 EPOCHS = 5
 MODEL_NAME = "resnet50"

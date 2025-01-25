@@ -95,3 +95,4 @@ class CamDataset(Dataset):
             image = self.transform(image)
 
         return (image, scale), label
+
