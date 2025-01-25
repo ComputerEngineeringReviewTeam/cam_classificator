@@ -80,7 +80,7 @@ class CamDataset(Dataset):
     def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], torch.Tensor]:
         data = self.labels.iloc[item]
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
-        image = decode_image(image_path)
+        image = decode_image(image_path).to(torch.float32)
         label = torch.tensor([
                 data[ColumnNames.TotalArea],
                 data[ColumnNames.TotalLength],
@@ -95,3 +95,4 @@ class CamDataset(Dataset):
             image = self.transform(image)
 
         return (image, scale), label
+

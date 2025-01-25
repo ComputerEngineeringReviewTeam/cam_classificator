@@ -5,9 +5,12 @@ import requests
 import datetime
 from urllib.parse import urljoin
 
+import ai.nn.config
+
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
 # BASE_URL = "http://127.0.0.1:5000/cam"
-SAVE_DIR = f"./data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
+# SAVE_DIR = f"../data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
+SAVE_DIR = os.environ["DATA_DIR"]
 
 session = requests.Session()
 
@@ -109,7 +112,7 @@ def download_photos(data) -> None:
         if response.status_code != 200:
             continue
         response.raise_for_status()
-        filename = os.path.join(SAVE_DIR + 'photos', os.path.basename(url))
+        filename = os.path.join(SAVE_DIR, "photos", os.path.basename(url))
 
         with open(filename, "wb") as f:
             for chunk in response.iter_content(1024):
@@ -118,7 +121,8 @@ def download_photos(data) -> None:
 
 
 def main():
-    os.makedirs(SAVE_DIR + 'photos/', exist_ok=True)
+    photos_dir = os.path.join(SAVE_DIR, "photos/")
+    os.makedirs(photos_dir, exist_ok=True)
 
     try:
         key = sys.argv[1]
@@ -132,7 +136,8 @@ def main():
 
     print('Logged in. Starting downloading data...\n')
     data = fetch_data()
-    with open(SAVE_DIR + 'data.json', 'w') as file:
+    json_path = os.path.join(SAVE_DIR, "data.json")
+    with open(json_path, 'w') as file:
         json.dump(data, file, indent=4)
 
     print('Downloaded data. Starting downloading photos...\n')
