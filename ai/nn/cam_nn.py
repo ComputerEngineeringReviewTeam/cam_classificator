@@ -3,10 +3,11 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchmetrics import Accuracy
 
+from ai.dataset.cam_label import JsonLabelLoader
 from ai.nn.config import *
-from ai.dataset.cam_dataset import StructuredCamDataset
 from ai.nn.camnet import CamNet
 from ai.nn.custom_loss import CustomLoss
+from ai.dataset.dataset_helpers import train_test_datasets
 
 
 def train(model: torch.nn.Module, device: str, loss_fn: torch.nn.Module, dataloader: DataLoader,
@@ -32,12 +33,15 @@ def test(model: torch.nn.Module, device: str, dataloader: DataLoader, metric: to
 
 
 if __name__ == '__main__':
-    tsfms = transforms.Compose([
+    tsfms = transforms.Compose([           
         transforms.Resize(*TARGET_SIZE),
-        transforms.ToTensor()
     ])
-    train_dataset = StructuredCamDataset(ROOT_DIR, tsfms, train=True)  # Datasets for train
-    test_dataset = StructuredCamDataset(ROOT_DIR, tsfms, train=False)  # and test data
+
+    label_loader = JsonLabelLoader()  # Loads data from JSON file
+    train_dataset, test_dataset = train_test_datasets(all_labels=label_loader.load(LABELS_PATH),  # Create train / test datasets
+                                                      img_dir=IMG_DIR,                            # with data split according to
+                                                      train_fraction=TRAIN_FRACTION,              # TRAIN_FRACTION
+                                                      transform=tsfms)                            # TRAIN_FRACTION=0.8 => 80% of data is training data
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=False)  # Configured DataLoader for loading
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)  # train and test data in batches

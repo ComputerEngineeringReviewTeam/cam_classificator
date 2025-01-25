@@ -1,9 +1,11 @@
 import torch
 
 # Data config
-ROOT_DIR = "../../"
+LABELS_PATH = "../../data/data.json"
+IMG_DIR = "../../data/photos"
 TARGET_SIZE = (224, 224)
 BATCH_SIZE = 8
+TRAIN_FRACTION = 0.8
 
 # Device config
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
