@@ -1,5 +1,6 @@
 import torch.nn as nn
 import timm
+import torchvision.transforms as transforms
 
 from ai.nn.config import *
 
@@ -24,6 +25,13 @@ class CamNet(nn.Module):
             nn.Dropout(0.3),
             nn.Linear(128, 4),
         )
+
+        self.random_trans = transforms.Compose([
+            transforms.RandomRotation(30),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
+            transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2)
+        ])
 
     def forward(self, inputs):
         image, scale = inputs
