@@ -9,5 +9,5 @@ Assuming we have requests library. If now we should create venv and use the requ
 ```
 Example:
 ```shell
-  python scrape.py tkanka-cam-3000
+  python scrape.py test-test-3333
 ```

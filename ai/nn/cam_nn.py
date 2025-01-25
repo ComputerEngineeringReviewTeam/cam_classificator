@@ -12,24 +12,32 @@ from ai.dataset.dataset_helpers import train_test_datasets
 
 def train(model: torch.nn.Module, device: str, loss_fn: torch.nn.Module, dataloader: DataLoader,
           optimizer: torch.optim.Optimizer, epochs: int):
+    print('Training...')
     for epoch in range(epochs):
 
         for i, ((image, scale), label) in enumerate(dataloader):
             image, scale, label = image.to(device), scale.to(device), label.to(device)
-            result = model((model.random_trans(image), scale))
-            loss = loss_fn(result, label)
+            binary_output, regression_output = model((image, scale))  # model.random_trans(image)
+            binary_target = label[:, -1].unsqueeze(1)
+            regression_target = label[:, 1:]
+            loss = loss_fn(binary_output, regression_output, binary_target, regression_target)
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+        print(f"Epoch {epoch+1} loss: {loss.item()}")
+    print('Finished Training')
 
 
 def test(model: torch.nn.Module, device: str, dataloader: DataLoader, metric: torchmetrics.Metric):
     with torch.no_grad():
         for i, ((image, scale), label) in enumerate(dataloader):
             image, scale, label = image.to(device), scale.to(device), label.to(device)
-            result = model((image, scale))
-            metric(result, label)
+            binary_output, regression_output = model((image, scale))
+            binary_target = label[:, -1].unsqueeze(1)
+            regression_target = label[:, 1:]
+
+            metric(binary_output, binary_target)
 
 
 if __name__ == '__main__':
@@ -58,8 +66,13 @@ if __name__ == '__main__':
     if TRAIN:
         model.train()
         train(model, DEVICE, loss_fn, train_loader, optimizer, EPOCHS)
+        if SAVE_MODEL:
+            torch.save(model.state_dict(), MODEL_PATH)
 
     if TEST:
+        if LOAD_MODEL:
+            model = CamNet(model_name=MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=DEVICE)
+            model.load_state_dict(torch.load(MODEL_PATH, weights_only=True))
         model.eval()
         test(model, DEVICE, test_loader, metric)
         print(f"Accuracy: {metric.compute()}")
