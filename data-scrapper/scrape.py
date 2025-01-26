@@ -5,8 +5,6 @@ import requests
 import datetime
 from urllib.parse import urljoin
 
-import ai.nn.config
-
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
 # BASE_URL = "http://127.0.0.1:5000/cam"
 # SAVE_DIR = f"../data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
