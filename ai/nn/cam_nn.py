@@ -61,7 +61,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     loss_fn = CustomLoss()
 
-    metric = Accuracy(task=METRIC_TASK, num_labels=NUM_LABELS)
+    metric = Accuracy(task=METRIC_TASK, num_labels=NUM_LABELS).to(DEVICE)
 
     if TRAIN:
         model.train()
