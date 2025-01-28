@@ -21,14 +21,12 @@ print("Cuda available?", torch.cuda.is_available())
 TRAIN = True
 SAVE_MODEL = True
 LEARNING_RATE = 1e-3
-EPOCHS = 20
+EPOCHS = 5
 MODEL_NAME = "resnet50"
 DROPOUT = 0.2
 FEATURES = 256
 
 # Test config
 TEST = True
-LOAD_MODEL = True
-METRIC_TASK = 'multilabel'
-NUM_LABELS = 5
-
+LOAD_MODEL = False
+BINARY_ACCURACY_THRESHOLD = 0.5
