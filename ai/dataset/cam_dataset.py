@@ -17,7 +17,7 @@ class CamDataset(Dataset):
         transform: Transformation to be applied to the images
 
     __getitem__() returns:
-        (transformed_image, scale), (binary_target, regression_target)
+        (transformed_image, scale), label
     """
     def __init__(self,
                  labels: DataFrame,
@@ -77,24 +77,22 @@ class CamDataset(Dataset):
     def __len__(self):
         return len(self.labels)
 
-    def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], tuple[torch.Tensor, torch.Tensor]]:
+    def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], torch.Tensor]:
         data = self.labels.iloc[item]
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
-
         image = decode_image(image_path).to(torch.float32)
-        scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
-
-        regression_target = torch.tensor([
+        label = torch.tensor([
                 data[ColumnNames.TotalArea],
                 data[ColumnNames.TotalLength],
                 data[ColumnNames.MeanThickness],
                 data[ColumnNames.BranchingPoints],
+                data[ColumnNames.IsGood],             # maybe handle this one differently
             ],
             dtype=torch.float32)
-        binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=torch.float32)
+        scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
 
         if self.transform:
             image = self.transform(image)
 
-        return (image, scale), (binary_target, regression_target)
+        return (image, scale), label
 
