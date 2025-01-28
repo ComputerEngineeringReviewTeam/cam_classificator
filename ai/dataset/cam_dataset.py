@@ -1,7 +1,8 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torchvision.io import decode_image
+from torchvision.transforms import Compose
 from pandas import DataFrame
 
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
@@ -17,18 +18,22 @@ class CamDataset(Dataset):
         transform: Transformation to be applied to the images
 
     __getitem__() returns:
-        (transformed_image, scale), label
+        (transformed_image, scale), (binary_target, regression_target)
     """
     def __init__(self,
                  labels: DataFrame,
                  img_dir: str,
-                 transform=None):
+                 transform: Compose | None):
         self.labels = labels
         self.img_dir = img_dir
         self.transform = transform
 
     @classmethod
-    def from_label_loader(cls, label_loader: LabelLoader, labels_path: str, img_dir: str, transform=None):
+    def from_label_loader(cls,
+                          label_loader: LabelLoader,
+                          labels_path: str,
+                          img_dir: str,
+                          transform: Compose | None):
         """
         Create a CamDataset from a LabelLoader
 
@@ -45,7 +50,10 @@ class CamDataset(Dataset):
         return cls(labels, img_dir, transform)
 
     @classmethod
-    def from_csv(cls, labels_path: str, img_dir: str, transform=None):
+    def from_csv(cls,
+                 labels_path: str,
+                 img_dir: str,
+                 transform: Compose | None):
         """
         Create a CamDataset from a csv file
 
@@ -60,7 +68,10 @@ class CamDataset(Dataset):
         return cls.from_label_loader(CsvLabelLoader(), labels_path, img_dir, transform)
 
     @classmethod
-    def from_json(cls, labels_path: str, img_dir: str, transform=None):
+    def from_json(cls,
+                  labels_path: str,
+                  img_dir: str,
+                  transform: Compose | None):
         """
         Create a CamDataset from a json file
 
@@ -77,22 +88,24 @@ class CamDataset(Dataset):
     def __len__(self):
         return len(self.labels)
 
-    def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], torch.Tensor]:
+    def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], tuple[torch.Tensor, torch.Tensor]]:
         data = self.labels.iloc[item]
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
+
         image = decode_image(image_path).to(torch.float32)
-        label = torch.tensor([
+        scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
+
+        regression_target = torch.tensor([
                 data[ColumnNames.TotalArea],
                 data[ColumnNames.TotalLength],
                 data[ColumnNames.MeanThickness],
                 data[ColumnNames.BranchingPoints],
-                data[ColumnNames.IsGood],             # maybe handle this one differently
             ],
             dtype=torch.float32)
-        scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
+        binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=torch.float32)
 
         if self.transform:
             image = self.transform(image)
 
-        return (image, scale), label
+        return (image, scale), (binary_target, regression_target)
 
