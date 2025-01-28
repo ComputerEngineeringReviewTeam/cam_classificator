@@ -34,7 +34,7 @@ def prepare_tensors(image: torch.Tensor,
 
     image, scale = image.to(device), scale.to(device)
     binary_target, regression_target = binary_target.to(device), regression_target.to(device)
-    #binary_target = binary_target.unsqueeze(1)
+    binary_target = binary_target.unsqueeze(1)
     return image, scale, binary_target, regression_target
 
 
@@ -84,7 +84,8 @@ if __name__ == '__main__':
     (train_dataset, test_dataset), (train_loader, test_loader) = train_test_data(label_loader.load(LABELS_PATH),
                                                                                  IMG_DIR,
                                                                                  TRAIN_FRACTION,
-                                                                                 BATCH_SIZE
+                                                                                 BATCH_SIZE,
+                                                                                 tsfms
                                                                                  )
 
     model = (CamNet(model_name=MODEL_NAME,

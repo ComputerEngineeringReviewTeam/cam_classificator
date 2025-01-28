@@ -1,9 +1,13 @@
 from pandas import DataFrame
 from torch.utils.data import DataLoader
+from torchvision.transforms import Compose
 
 from ai.dataset.cam_dataset import CamDataset
 
-def train_test_datasets(all_labels: DataFrame, img_dir: str, train_fraction: float, transform=None) -> tuple[CamDataset, CamDataset]:
+def train_test_datasets(all_labels: DataFrame,
+                        img_dir: str,
+                        train_fraction: float,
+                        transform: Compose | None) -> tuple[CamDataset, CamDataset]:
     """
     Splits the labels into train and test datasets according to the train_fraction
 
@@ -21,7 +25,9 @@ def train_test_datasets(all_labels: DataFrame, img_dir: str, train_fraction: flo
     return train_dataset, test_dataset
 
 
-def get_dataloaders(train_dataset: CamDataset, test_dataset: CamDataset, batch_size: int) -> tuple[DataLoader, DataLoader]:
+def get_dataloaders(train_dataset: CamDataset,
+                    test_dataset: CamDataset,
+                    batch_size: int) -> tuple[DataLoader, DataLoader]:
     """
     Creates dataloaders for the train and test datasets
 
@@ -38,7 +44,11 @@ def get_dataloaders(train_dataset: CamDataset, test_dataset: CamDataset, batch_s
     return train_dataloader, test_dataloader
 
 
-def train_test_data(all_labels: DataFrame, img_dir: str, train_fraction: float, batch_size: int, transform=None)\
+def train_test_data(all_labels: DataFrame,
+                    img_dir: str,
+                    train_fraction: float,
+                    batch_size: int,
+                    transform: Compose | None)\
         -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
     """
     Creates train and test dataloaders from the labels

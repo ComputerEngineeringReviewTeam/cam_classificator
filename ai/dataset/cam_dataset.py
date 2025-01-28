@@ -1,7 +1,8 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torchvision.io import decode_image
+from torchvision.transforms import Compose
 from pandas import DataFrame
 
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
@@ -22,13 +23,17 @@ class CamDataset(Dataset):
     def __init__(self,
                  labels: DataFrame,
                  img_dir: str,
-                 transform=None):
+                 transform: Compose | None):
         self.labels = labels
         self.img_dir = img_dir
         self.transform = transform
 
     @classmethod
-    def from_label_loader(cls, label_loader: LabelLoader, labels_path: str, img_dir: str, transform=None):
+    def from_label_loader(cls,
+                          label_loader: LabelLoader,
+                          labels_path: str,
+                          img_dir: str,
+                          transform: Compose | None):
         """
         Create a CamDataset from a LabelLoader
 
@@ -45,7 +50,10 @@ class CamDataset(Dataset):
         return cls(labels, img_dir, transform)
 
     @classmethod
-    def from_csv(cls, labels_path: str, img_dir: str, transform=None):
+    def from_csv(cls,
+                 labels_path: str,
+                 img_dir: str,
+                 transform: Compose | None):
         """
         Create a CamDataset from a csv file
 
@@ -60,7 +68,10 @@ class CamDataset(Dataset):
         return cls.from_label_loader(CsvLabelLoader(), labels_path, img_dir, transform)
 
     @classmethod
-    def from_json(cls, labels_path: str, img_dir: str, transform=None):
+    def from_json(cls,
+                  labels_path: str,
+                  img_dir: str,
+                  transform: Compose | None):
         """
         Create a CamDataset from a json file
 
