@@ -59,6 +59,7 @@ def train(model: torch.nn.Module,
             loss.backward()
             optimizer.step()
         print(f"Epoch {epoch+1} Loss: {loss.item()} Accuracy: {acc.compute()}")
+        print(binary_output)
         acc.reset()
     print('Finished Training')
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
 
     model = (CamNet(model_name=MODEL_NAME,
                     pretrained=True,
-                    num_aux_inputs=1)
+                    num_aux_inputs=0)
              .to(device=DEVICE))
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     loss_fn = CustomLoss()
