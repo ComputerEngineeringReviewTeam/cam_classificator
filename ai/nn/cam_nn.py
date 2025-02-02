@@ -83,10 +83,12 @@ if __name__ == '__main__':
 
     label_loader = JsonLabelLoader()  # Loads data from JSON file
     (train_dataset, test_dataset), (train_loader, test_loader) = train_test_data(label_loader.load(LABELS_PATH),
-                                                                                 IMG_DIR,
-                                                                                 TRAIN_FRACTION,
-                                                                                 BATCH_SIZE,
-                                                                                 tsfms
+                                                                                 img_dir=IMG_DIR,
+                                                                                 train_fraction=TRAIN_FRACTION,
+                                                                                 batch_size=BATCH_SIZE,
+                                                                                 transform=tsfms,
+                                                                                 random_state=RANDOM_SEED,
+                                                                                 balanced=True
                                                                                  )
 
     model = (CamNet(model_name=MODEL_NAME,
