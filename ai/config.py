@@ -1,18 +1,7 @@
 import torch
-import os
 
-# Environment config
-os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ["DATA_DIR"] = os.path.join(os.environ["CAM_ROOT"], "data")
-# Paths
-CAM_ROOT = os.environ["CAM_ROOT"]
-DATA_DIR = os.environ["DATA_DIR"]
-LABELS_PATH = os.path.join(DATA_DIR, "data.json")
-IMG_DIR = os.path.join(DATA_DIR, "photos")
-MODEL_PATH = os.path.join(CAM_ROOT, "model.pth")
 # Device config
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-print("Cuda available?", torch.cuda.is_available())
 
 # Data config
 TARGET_SIZE = (224, 224)# (width, height) to resize images to
@@ -35,3 +24,7 @@ RANDOM_SEED = 1234      # Random seed used to split data into train/test sets, u
 TEST = True             # Set to True to test the model
 LOAD_MODEL = False      # Set to True to load a model from MODEL_PATH
 BINARY_ACCURACY_THRESHOLD = 0.5 # Threshold for binary accuracy metric
+
+# Snapshot config
+SNAPSHOT = True
+SNAPSHOT_PATH = "snapshot.txt" # Path to save snapshot to
