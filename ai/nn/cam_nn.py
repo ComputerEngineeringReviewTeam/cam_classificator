@@ -2,10 +2,12 @@ import torchmetrics
 import torchvision.transforms as transforms
 
 from ai.dataset.cam_label import JsonLabelLoader
-from ai.nn.config import *
+from ai.config import *
+from ai.paths import LABELS_PATH, IMG_DIR, MODEL_PATH
 from ai.nn.camnet import CamNet
 from ai.nn.custom_loss import CustomLoss
 from ai.dataset.dataset_helpers import train_test_data, describe_dataset
+from ai.tools.cam_snapshot import CamSnapshot
 
 
 def prepare_tensors(image: torch.Tensor,
@@ -98,8 +100,12 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     loss_fn = CustomLoss()
 
+    snapshot = CamSnapshot(model, optimizer, loss_fn, train_loader, DEVICE)
+
     train_acc = torchmetrics.classification.BinaryAccuracy(threshold=BINARY_ACCURACY_THRESHOLD).to(device=DEVICE)
     test_acc = torchmetrics.classification.BinaryAccuracy(threshold=BINARY_ACCURACY_THRESHOLD).to(device=DEVICE)
+
+    print("Device:", DEVICE)
 
     if TRAIN:
         describe_dataset(train_dataset)
@@ -116,3 +122,6 @@ if __name__ == '__main__':
         model.eval()
         test(model, DEVICE, test_loader, test_acc)
         print(f"Test accuracy: {test_acc.compute()}")
+
+    if SNAPSHOT:
+        snapshot.save(SNAPSHOT_PATH)
