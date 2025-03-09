@@ -86,6 +86,7 @@ def train_test_datasets(all_labels: DataFrame,
                         transform: Compose | None,
                         random_state: int | None = None,
                         balanced: bool = False) -> tuple[CamDataset, CamDataset]:
+
     """
     Splits the labels into train and test datasets according to the train_fraction
 
@@ -100,6 +101,7 @@ def train_test_datasets(all_labels: DataFrame,
     Returns:
         train_dataset, test_dataset
     """
+
     train_data, test_data = sample_labels(all_labels, train_fraction, random_state, balanced)
     return CamDataset(train_data, img_dir, transform), CamDataset(test_data, img_dir, transform)
 
@@ -107,6 +109,7 @@ def train_test_datasets(all_labels: DataFrame,
 def to_dataloaders(train_dataset: CamDataset,
                    test_dataset: CamDataset,
                    batch_size: int) -> tuple[DataLoader, DataLoader]:
+
     """
     Creates dataloaders for the train and test datasets
 
@@ -130,6 +133,7 @@ def train_test_data(all_labels: DataFrame,
                     transform: Compose | None,
                     random_state: int | None = None,
                     balanced: bool = False)\
+
         -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
     """
     Creates train and test dataloaders from the labels
@@ -148,13 +152,13 @@ def train_test_data(all_labels: DataFrame,
     """
     train_dataset, test_dataset = train_test_datasets(all_labels, img_dir, train_fraction, transform, random_state, balanced)
     train_dataloader, test_dataloader = to_dataloaders(train_dataset, test_dataset, batch_size)
+
     return (train_dataset, test_dataset), (train_dataloader, test_dataloader)
 
 
 def describe_dataset(dataset: CamDataset):
     """
     Describes the dataset by printing the counts of the unique values in the ColumnNames.IsGood column
-
     Args:
         dataset: torch.utils.data.Dataset
     """
