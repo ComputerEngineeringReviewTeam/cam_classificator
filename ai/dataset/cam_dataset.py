@@ -92,7 +92,9 @@ class CamDataset(Dataset):
         data = self.labels.iloc[item]
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
 
-        image = decode_image(image_path).to(torch.float32)
+
+        image = decode_image(image_path).to(torch.float32) / 255.0 
+
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
 
         regression_target = torch.tensor([

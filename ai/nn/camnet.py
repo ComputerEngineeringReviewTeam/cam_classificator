@@ -19,12 +19,12 @@ class CamNet(nn.Module):
             nn.Linear(FEATURES, 1),
         )
 
-        self.regressor = nn.Sequential(
-            nn.Linear(feature_dim + num_aux_inputs, FEATURES),
-            nn.ReLU(),
-            nn.Dropout(DROPOUT),
-            nn.Linear(FEATURES, 4),
-        )
+        # self.regressor = nn.Sequential(
+        #     nn.Linear(feature_dim + num_aux_inputs, FEATURES),
+        #     nn.ReLU(),
+        #     nn.Dropout(DROPOUT),
+        #     nn.Linear(FEATURES, 4),
+        # )
 
         self.random_trans = transforms.Compose([
             transforms.RandomRotation(30),
@@ -39,9 +39,11 @@ class CamNet(nn.Module):
 
         scale = torch.unsqueeze(scale, 1)
 
-        combined_features = torch.cat((image_features, scale), dim=1)
+        # combined_features = torch.cat((image_features, scale), dim=1)
+        combined_features = image_features
 
         binary_output = self.classifier(combined_features)
-        regression_output = self.regressor(combined_features)
+        # regression_output = self.regressor(combined_features)
 
-        return binary_output, regression_output
+        # return binary_output, regression_output
+        return binary_output, 0

@@ -1,7 +1,9 @@
 pandas==2.2.3
-torch==2.5.1+cu124
+pillow==11.1.0
+torch==2.5.1
+#torch==2.5.1+cu124
 torchvision==0.20.1
-
+torchmetrics==1.6.1
+timm==1.0.14
 
 # pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-
