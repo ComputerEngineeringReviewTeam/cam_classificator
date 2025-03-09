@@ -2,7 +2,7 @@ import torch.nn as nn
 import timm
 import torchvision.transforms as transforms
 
-from ai.nn.config import *
+from ai.config import *
 
 
 class CamNet(nn.Module):
