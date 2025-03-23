@@ -1,6 +1,7 @@
 import torch
 import timm
 
+
 class FragmentClassifier(torch.nn.Module):
     """
     A simple classifier model that uses a pretrained ResNet18 model from timm

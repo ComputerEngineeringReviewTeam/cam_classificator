@@ -7,16 +7,17 @@ import shutil
 
 from model import FragmentClassifier
 
-DATA_PATH = '../data/new/test'          # Path to the folder containing the full images in 2 subfolders - 1 per class
-MODEL_PATH = '../models/fragments/model99.pth'     # Path to the trained model
+CAM_CLASSIFIER_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_ROOT = os.path.join(CAM_CLASSIFIER_ROOT, "data", "new", "test")         # Path to the folder containing the full images in 2 subfolders - 1 per class
+MODEL_PATH = os.path.join(CAM_CLASSIFIER_ROOT, "models", "fragments", "model99.pth")     # Path to the trained model
 TARGET_SIZE = (224, 224)                # Size to which the images will be resized
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-CLASS_1_OUTPUT_PATH = '../data/class_1' # Path to save the images classified as class 1
-CLASS_2_OUTPUT_PATH = '../data/class_2' # Path to save the images classified as class 2
+CLASS_1_OUTPUT_PATH = os.path.join(CAM_CLASSIFIER_ROOT, "data", "class_1") # Path to save the images classified as class 1
+CLASS_2_OUTPUT_PATH = os.path.join(CAM_CLASSIFIER_ROOT, "data", "class_2") # Path to save the images classified as class 2
 
 
 transforms = tsf.Compose([tsf.Resize(TARGET_SIZE), tsf.ToTensor()]) # Resize and convert the images to tensors
-dataset = ImageFolder(root=DATA_PATH, transform=transforms)
+dataset = ImageFolder(root=DATA_ROOT, transform=transforms)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 model = FragmentClassifier().to(device=DEVICE)
 model.load_state_dict(torch.load(MODEL_PATH, weights_only=True))
