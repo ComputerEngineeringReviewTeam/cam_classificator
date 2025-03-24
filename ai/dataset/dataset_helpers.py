@@ -132,9 +132,7 @@ def train_test_data(all_labels: DataFrame,
                     batch_size: int,
                     transform: Compose | None,
                     random_state: int | None = None,
-                    balanced: bool = False)\
-
-        -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
+                    balanced: bool = False) -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
     """
     Creates train and test dataloaders from the labels
 
