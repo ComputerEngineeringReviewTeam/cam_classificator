@@ -26,10 +26,12 @@ model.load_state_dict(torch.load(MODEL_PATH, weights_only=True))
 os.makedirs(CLASS_1_OUTPUT_PATH, exist_ok=True)
 os.makedirs(CLASS_2_OUTPUT_PATH, exist_ok=True)
 
+
 def save_image_to_output(image_path: str, output_path: str):
     image_name = os.path.basename(image_path)
     shutil.copy(image_path, os.path.join(output_path, image_name))
     # print(f"Image: {image_name} Saved to: {output_path}")
+
 
 # Run the model on the images and save them to the appropriate output directory
 model.eval()

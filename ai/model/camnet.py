@@ -2,7 +2,7 @@ import torch.nn as nn
 import timm
 import torchvision.transforms as transforms
 
-from ai.nn.config import *
+from ai.model.config import *
 
 
 class CamNet(nn.Module):
@@ -37,7 +37,7 @@ class CamNet(nn.Module):
         image, scale = inputs
         image_features = self.feature_extractor(image)
 
-        scale = torch.unsqueeze(scale, 1)
+        scale = torch.unsqueeze(scale, 1) # temporary unused
 
         # combined_features = torch.cat((image_features, scale), dim=1)
         combined_features = image_features

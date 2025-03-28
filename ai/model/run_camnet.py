@@ -2,9 +2,9 @@ import torchmetrics
 import torchvision.transforms as transforms
 
 from ai.dataset.cam_label import JsonLabelLoader
-from ai.nn.config import *
-from ai.nn.camnet import CamNet
-from ai.nn.custom_loss import CustomLoss
+from ai.model.config import *
+from ai.model.camnet import CamNet
+from ai.model.custom_loss import CustomLoss
 from ai.dataset.dataset_helpers import train_test_data, describe_dataset
 
 
