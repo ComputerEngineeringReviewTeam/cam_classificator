@@ -1,8 +1,9 @@
-import torch
 import os
+import torch
 
 
 # Paths
+os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CAM_ROOT = os.environ["CAM_ROOT"]
 DATA_DIR = os.path.join(CAM_ROOT, "data")
 LABELS_PATH = os.path.join(DATA_DIR, "data.json")
