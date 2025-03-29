@@ -23,6 +23,7 @@ class CamDataset(Dataset):
     __getitem__() returns:
         (transformed_image, scale), (binary_target, regression_target)
     """
+
     def __init__(self,
                  labels: DataFrame,
                  img_dir: str,
@@ -95,6 +96,7 @@ class CamDataset(Dataset):
         data = self.labels.iloc[item]
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
 
+
         # image = decode_image(image_path).to(torch.float32)
         imagePillow = Image.open(image_path, mode="r")
         # imagePillow.show()
@@ -102,14 +104,15 @@ class CamDataset(Dataset):
         imagePillow = imagePillow.filter(ImageFilter.CONTOUR)
         #imagePillow.show()
         image = functional.pil_to_tensor(imagePillow).to(torch.float32)
+
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
 
         regression_target = torch.tensor([
-                data[ColumnNames.TotalArea],
-                data[ColumnNames.TotalLength],
-                data[ColumnNames.MeanThickness],
-                data[ColumnNames.BranchingPoints],
-            ],
+            data[ColumnNames.TotalArea],
+            data[ColumnNames.TotalLength],
+            data[ColumnNames.MeanThickness],
+            data[ColumnNames.BranchingPoints],
+        ],
             dtype=torch.float32)
         binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=torch.float32)
 
@@ -117,4 +120,3 @@ class CamDataset(Dataset):
             image = self.transform(image)
 
         return (image, scale), (binary_target, regression_target)
-

@@ -1,10 +1,12 @@
+import os
+import torch
 import torchmetrics
 import torchvision.transforms as transforms
 
+import ai.model.config as conf
 from ai.dataset.cam_label import JsonLabelLoader
-from ai.nn.config import *
-from ai.nn.camnet import CamNet
-from ai.nn.custom_loss import CustomLoss
+from ai.model.camnet import CamNet
+from ai.model.custom_loss import CustomLoss
 from ai.dataset.dataset_helpers import train_test_data, describe_dataset
 
 
@@ -49,7 +51,8 @@ def train(model: torch.nn.Module,
     for epoch in range(epochs):
 
         for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
-            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target, regression_target, device)
+            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
+                                                                             regression_target, device)
 
             binary_output, regression_output = model((image, scale))  # model.random_trans(image)
             loss = loss_fn(binary_output, regression_output, binary_target, regression_target)
@@ -58,7 +61,7 @@ def train(model: torch.nn.Module,
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-        print(f"Epoch {epoch+1} Loss: {loss.item()} Accuracy: {acc.compute()}")
+        print(f"Epoch {epoch + 1} Loss: {loss.item()} Accuracy: {acc.compute()}")
         print(binary_output)
         acc.reset()
     print('Finished Training')
@@ -70,49 +73,54 @@ def test(model: torch.nn.Module,
          metric: torchmetrics.Metric):
     with torch.no_grad():
         for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
-            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target, regression_target, device)
+            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
+                                                                             regression_target, device)
 
             binary_output, regression_output = model((image, scale))
             metric(binary_output, binary_target)
 
 
-if __name__ == '__main__':
+def run_camnet():
     tsfms = transforms.Compose([
-        transforms.Resize(TARGET_SIZE),
+        transforms.Resize(conf.TARGET_SIZE),
     ])
 
     label_loader = JsonLabelLoader()  # Loads data from JSON file
-    (train_dataset, test_dataset), (train_loader, test_loader) = train_test_data(label_loader.load(LABELS_PATH),
-                                                                                 img_dir=IMG_DIR,
-                                                                                 train_fraction=TRAIN_FRACTION,
-                                                                                 batch_size=BATCH_SIZE,
+    (train_dataset, test_dataset), (train_loader, test_loader) = train_test_data(label_loader.load(conf.LABELS_PATH),
+                                                                                 img_dir=conf.IMG_DIR,
+                                                                                 train_fraction=conf.TRAIN_FRACTION,
+                                                                                 batch_size=conf.BATCH_SIZE,
                                                                                  transform=tsfms,
-                                                                                 random_state=RANDOM_SEED,
+                                                                                 random_state=conf.RANDOM_SEED,
                                                                                  balanced=True
                                                                                  )
 
-    model = (CamNet(model_name=MODEL_NAME,
+    model = (CamNet(model_name=conf.MODEL_NAME,
                     pretrained=True,
                     num_aux_inputs=0)
-             .to(device=DEVICE))
-    optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
+             .to(device=conf.DEVICE))
+    optimizer = torch.optim.Adam(model.parameters(), lr=conf.LEARNING_RATE)
     loss_fn = CustomLoss()
 
-    train_acc = torchmetrics.classification.BinaryAccuracy(threshold=BINARY_ACCURACY_THRESHOLD).to(device=DEVICE)
-    test_acc = torchmetrics.classification.BinaryAccuracy(threshold=BINARY_ACCURACY_THRESHOLD).to(device=DEVICE)
+    train_acc = torchmetrics.classification.BinaryAccuracy(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE)
+    test_acc = torchmetrics.classification.BinaryAccuracy(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE)
 
-    if TRAIN:
+    if conf.TRAIN:
         describe_dataset(train_dataset)
         model.train()
-        train(model, DEVICE, loss_fn, train_loader, optimizer, EPOCHS, train_acc)
-        if SAVE_MODEL:
-            torch.save(model.state_dict(), MODEL_PATH)
+        train(model, conf.DEVICE, loss_fn, train_loader, optimizer, conf.EPOCHS, train_acc)
+        if conf.SAVE_MODEL:
+            torch.save(model.state_dict(), conf.MODEL_PATH)
 
-    if TEST:
+    if conf.TEST:
         describe_dataset(test_dataset)
-        if LOAD_MODEL:
-            model = CamNet(model_name=MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=DEVICE)
-            model.load_state_dict(torch.load(MODEL_PATH, weights_only=True))
+        if conf.LOAD_MODEL:
+            model = CamNet(model_name=conf.MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=conf.DEVICE)
+            model.load_state_dict(torch.load(conf.MODEL_PATH, weights_only=True))
         model.eval()
-        test(model, DEVICE, test_loader, test_acc)
+        test(model, conf.DEVICE, test_loader, test_acc)
         print(f"Test accuracy: {test_acc.compute()}")
+
+
+if __name__ == '__main__':
+    run_camnet()
