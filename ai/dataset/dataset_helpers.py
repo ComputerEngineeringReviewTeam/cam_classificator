@@ -30,7 +30,7 @@ def train_test_sample(all_labels: DataFrame,
 def train_test_balanced_sample(all_labels: DataFrame,
                                train_fraction: float,
                                random_state: int | None = None) -> tuple[DataFrame, DataFrame]:
-     """
+    """
      Splits the labels into train and test samples according to the train_fraction, ensuring that the classes are balanced
 
      Args:
@@ -42,19 +42,19 @@ def train_test_balanced_sample(all_labels: DataFrame,
           train_data, test_data
      """
 
-     good_labels = all_labels[all_labels[ColumnNames.IsGood] == 1]
-     bad_labels = all_labels[all_labels[ColumnNames.IsGood] == 0]
+    good_labels = all_labels[all_labels[ColumnNames.IsGood] == 1]
+    bad_labels = all_labels[all_labels[ColumnNames.IsGood] == 0]
 
-     good_labels_for_train = good_labels.sample(frac=train_fraction, random_state=random_state)
-     good_labels_for_test = good_labels.drop(good_labels_for_train.index)
+    good_labels_for_train = good_labels.sample(frac=train_fraction, random_state=random_state)
+    good_labels_for_test = good_labels.drop(good_labels_for_train.index)
 
-     bad_labels_for_train = bad_labels.sample(frac=train_fraction, random_state=random_state)
-     bad_labels_for_test = bad_labels.drop(bad_labels_for_train.index)
+    bad_labels_for_train = bad_labels.sample(frac=train_fraction, random_state=random_state)
+    bad_labels_for_test = bad_labels.drop(bad_labels_for_train.index)
 
-     train_data = pd.concat([good_labels_for_train, bad_labels_for_train])
-     test_data = pd.concat([good_labels_for_test, bad_labels_for_test])
+    train_data = pd.concat([good_labels_for_train, bad_labels_for_train])
+    test_data = pd.concat([good_labels_for_test, bad_labels_for_test])
 
-     return train_data, test_data
+    return train_data, test_data
 
 
 def sample_labels(all_labels: DataFrame,
@@ -80,13 +80,13 @@ def sample_labels(all_labels: DataFrame,
         return train_test_balanced_sample(all_labels, train_fraction, random_state)
     return train_test_sample(all_labels, train_fraction, random_state)
 
+
 def train_test_datasets(all_labels: DataFrame,
                         img_dir: str,
                         train_fraction: float,
                         transform: Compose | None,
                         random_state: int | None = None,
                         balanced: bool = False) -> tuple[CamDataset, CamDataset]:
-
     """
     Splits the labels into train and test datasets according to the train_fraction
 
@@ -109,7 +109,6 @@ def train_test_datasets(all_labels: DataFrame,
 def to_dataloaders(train_dataset: CamDataset,
                    test_dataset: CamDataset,
                    batch_size: int) -> tuple[DataLoader, DataLoader]:
-
     """
     Creates dataloaders for the train and test datasets
 
@@ -132,9 +131,7 @@ def train_test_data(all_labels: DataFrame,
                     batch_size: int,
                     transform: Compose | None,
                     random_state: int | None = None,
-                    balanced: bool = False)\
-
-        -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
+                    balanced: bool = False) -> tuple[tuple[CamDataset, CamDataset], tuple[DataLoader, DataLoader]]:
     """
     Creates train and test dataloaders from the labels
 
@@ -150,7 +147,8 @@ def train_test_data(all_labels: DataFrame,
     Returns:
         train_dataloader, test_dataloader
     """
-    train_dataset, test_dataset = train_test_datasets(all_labels, img_dir, train_fraction, transform, random_state, balanced)
+    train_dataset, test_dataset = train_test_datasets(all_labels, img_dir, train_fraction, transform, random_state,
+                                                      balanced)
     train_dataloader, test_dataloader = to_dataloaders(train_dataset, test_dataset, batch_size)
 
     return (train_dataset, test_dataset), (train_dataloader, test_dataloader)
