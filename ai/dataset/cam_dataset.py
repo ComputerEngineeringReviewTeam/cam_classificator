@@ -1,14 +1,18 @@
 import os
+
+import numpy as np
 import torch
 from torch.utils.data import Dataset
 from torchvision.io import decode_image
 from torchvision.transforms import Compose, functional
 from pandas import DataFrame
 from PIL import Image, ImageFilter
-from ai.nn.config import *
+from ai.model.config import *
 
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
-from ai.nn.config import TARGET_SIZE
+from ai.model.config import TARGET_SIZE
+
+import utils.filters as filters
 
 
 class CamDataset(Dataset):
@@ -97,13 +101,16 @@ class CamDataset(Dataset):
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
 
 
-        # image = decode_image(image_path).to(torch.float32)
+        #image = decode_image(image_path).to(torch.float32)
+
         imagePillow = Image.open(image_path, mode="r")
+        #pil = np.array(imagePillow)
         # imagePillow.show()
-        imagePillow = imagePillow.resize(TARGET_SIZE)
-        imagePillow = imagePillow.filter(ImageFilter.CONTOUR)
+        #imagePillow = imagePillow.resize(TARGET_SIZE)
+        #imagePillow = imagePillow.filter(ImageFilter.CONTOUR)
         #imagePillow.show()
         image = functional.pil_to_tensor(imagePillow).to(torch.float32)
+
 
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
 
