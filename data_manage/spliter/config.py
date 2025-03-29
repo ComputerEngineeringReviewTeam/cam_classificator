@@ -20,5 +20,3 @@ TRAIN = True                            # Set to True to train the model
 SAVE_MODEL = True                       # Set to True to save the trained model
 TEST = True                             # Set to True to test the model
 LOAD_MODEL = True                       # Set to True to load the trained model
-
-
