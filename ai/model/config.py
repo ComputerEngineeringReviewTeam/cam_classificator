@@ -1,6 +1,8 @@
 import os
 import torch
+import utils.filters as flt
 
+datasetFilterSet = flt.Filters()
 
 # Paths
 os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -34,3 +36,9 @@ RANDOM_SEED = 1234      # Random seed used to split data into train/test sets, u
 TEST = True             # Set to True to test the model
 LOAD_MODEL = False      # Set to True to load a model from MODEL_PATH
 BINARY_ACCURACY_THRESHOLD = 0.5  # Threshold for binary accuracy metric
+
+#Config for the image filters (applied before feeding the image into the network)
+(datasetFilterSet
+ .addFilter(flt.MatrixFilter([0, 0, 0, 0, 1, 0, 0, 0, 0]))
+ #.addFilter(flt.MatrixFilter([0, 0, 0, 0, 1, 0, 0, 0, 0]))
+ )
