@@ -104,9 +104,11 @@ class CamDataset(Dataset):
 
 
         image = flt.Image(image_path)
-        image.getImage().show()
+        if DISPLAY_IMAGES_BEFORE_FILTERS:
+            image.getImage().show()
         image = self.imageFilterSet.applyFilters(image)
-        image.getImage().show()
+        if DISPLAY_IMAGES_AFTER_FILTERS:
+            image.getImage().show()
         image = image.getTensor()
 
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
