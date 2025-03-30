@@ -5,6 +5,7 @@ from torchvision.transforms import Compose
 
 from ai.dataset.cam_dataset import CamDataset
 from ai.dataset.cam_label import ColumnNames
+from ai.model.config import datasetFilterSet
 
 
 def train_test_sample(all_labels: DataFrame,
@@ -103,7 +104,7 @@ def train_test_datasets(all_labels: DataFrame,
     """
 
     train_data, test_data = sample_labels(all_labels, train_fraction, random_state, balanced)
-    return CamDataset(train_data, img_dir, transform), CamDataset(test_data, img_dir, transform)
+    return CamDataset(train_data, img_dir, transform, datasetFilterSet), CamDataset(test_data, img_dir, transform, datasetFilterSet)
 
 
 def to_dataloaders(train_dataset: CamDataset,

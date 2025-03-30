@@ -31,10 +31,12 @@ class CamDataset(Dataset):
     def __init__(self,
                  labels: DataFrame,
                  img_dir: str,
-                 transform: Compose | None):
+                 transform: Compose | None,
+                 imageFilterSet: flt.Filters):
         self.labels = labels
         self.img_dir = img_dir
         self.transform = transform
+        self.imageFilterSet = imageFilterSet
 
     @classmethod
     def from_label_loader(cls,
@@ -101,16 +103,13 @@ class CamDataset(Dataset):
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
 
 
-        #image = decode_image(image_path).to(torch.float32)
-
-        imagePillow = Image.open(image_path, mode="r")
-        #pil = np.array(imagePillow)
-        # imagePillow.show()
-        #imagePillow = imagePillow.resize(TARGET_SIZE)
-        #imagePillow = imagePillow.filter(ImageFilter.CONTOUR)
-        #imagePillow.show()
-        image = functional.pil_to_tensor(imagePillow).to(torch.float32)
-
+        image = flt.Image(image_path)
+        if DISPLAY_IMAGES_BEFORE_FILTERS:
+            image.getImage().show()
+        image = self.imageFilterSet.applyFilters(image)
+        if DISPLAY_IMAGES_AFTER_FILTERS:
+            image.getImage().show()
+        image = image.getTensor()
 
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
 
