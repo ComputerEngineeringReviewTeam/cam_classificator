@@ -14,6 +14,14 @@ from ai.model.config import TARGET_SIZE
 
 import utils.filters as filters
 
+COLUMNS_TO_NORMALIZE = [ColumnNames.BranchingPoints]
+
+
+def normalize_minmax(column_tensor, new_max = 1.0, new_min = 0.0):
+    amin, amax = torch.amin(column_tensor), torch.amax(column_tensor)
+    normalized_column_tensor = ((column_tensor - amin) / (amax - amin)) * (new_max - new_min) + new_min
+    return normalized_column_tensor
+
 
 class CamDataset(Dataset):
     """
@@ -37,6 +45,7 @@ class CamDataset(Dataset):
         self.img_dir = img_dir
         self.transform = transform
         self.imageFilterSet = imageFilterSet
+        self.tensor_labels = self.prep()
 
     @classmethod
     def from_label_loader(cls,
@@ -95,34 +104,39 @@ class CamDataset(Dataset):
         """
         return cls.from_label_loader(JsonLabelLoader(), labels_path, img_dir, transform)
 
+    def prep(self):
+        labels_as_tensor = []
+        for column_name in COLUMNS_TO_NORMALIZE:
+            column_tensor = torch.tensor(self.labels[column_name].values, dtype=torch.float32)
+            special_value_mask = column_tensor == -1.0
+            normalized_column_tensor = normalize_minmax(column_tensor)
+            normalized_column_tensor[special_value_mask] = float('nan')
+            labels_as_tensor.append(normalized_column_tensor)
+        tensor_labels = torch.column_stack(labels_as_tensor)
+        return tensor_labels
+
     def __len__(self):
         return len(self.labels)
 
     def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], tuple[torch.Tensor, torch.Tensor]]:
         data = self.labels.iloc[item]
+
         image_path = os.path.join(self.img_dir, str(data[ColumnNames.ImageName]))
-
-
         image = flt.Image(image_path)
         if DISPLAY_IMAGES_BEFORE_FILTERS:
             image.getImage().show()
         image = self.imageFilterSet.applyFilters(image)
         if DISPLAY_IMAGES_AFTER_FILTERS:
             image.getImage().show()
-        image = image.getTensor()
 
+        image = image.getTensor() / 255.0   # most professional normalisation
         scale = torch.tensor(data[ColumnNames.Scale], dtype=torch.float32)
-
-        regression_target = torch.tensor([
-            data[ColumnNames.TotalArea],
-            data[ColumnNames.TotalLength],
-            data[ColumnNames.MeanThickness],
-            data[ColumnNames.BranchingPoints],
-        ],
-            dtype=torch.float32)
+        regression_target = self.tensor_labels[item]
         binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=torch.float32)
 
         if self.transform:
             image = self.transform(image)
 
         return (image, scale), (binary_target, regression_target)
+
+

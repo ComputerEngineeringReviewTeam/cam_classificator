@@ -6,7 +6,9 @@ import torchvision.transforms as transforms
 import ai.model.config as conf
 from ai.dataset.cam_label import JsonLabelLoader
 from ai.model.camnet import CamNet
+from ai.model.camnet2 import CamNet2
 from ai.model.custom_loss import CustomLoss
+from ai.model.custom_loss2 import CustomLoss2
 from ai.dataset.dataset_helpers import train_test_data, describe_dataset
 
 
@@ -53,17 +55,21 @@ def train(model: torch.nn.Module,
         for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
             image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
                                                                              regression_target, device)
-
             binary_output, regression_output = model((image, scale))  # model.random_trans(image)
+            print("model output", binary_output.tolist()[:3], regression_output.tolist()[:3])
+            # print("model output", binary_output.tolist()[:3], 0)
             loss = loss_fn(binary_output, regression_output, binary_target, regression_target)
             acc(binary_output, binary_target)
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            print(loss.item())
         print(f"Epoch {epoch + 1} Loss: {loss.item()} Accuracy: {acc.compute()}")
-        print(binary_output)
+        # print(binary_output)
+        # print(regression_target, '=>', regression_output)
         acc.reset()
+        # exit()
     print('Finished Training')
 
 
@@ -77,6 +83,8 @@ def test(model: torch.nn.Module,
                                                                              regression_target, device)
 
             binary_output, regression_output = model((image, scale))
+            # print("test", binary_output)
+            print("test", regression_target, '=>', regression_output)
             metric(binary_output, binary_target)
 
 
@@ -95,15 +103,33 @@ def run_camnet():
                                                                                  balanced=True
                                                                                  )
 
-    model = (CamNet(model_name=conf.MODEL_NAME,
+    model = (CamNet2(model_name=conf.MODEL_NAME,
                     pretrained=True,
                     num_aux_inputs=0)
              .to(device=conf.DEVICE))
     optimizer = torch.optim.Adam(model.parameters(), lr=conf.LEARNING_RATE)
-    loss_fn = CustomLoss()
+    loss_fn = CustomLoss2()
 
     train_acc = torchmetrics.classification.BinaryAccuracy(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE)
     test_acc = torchmetrics.classification.BinaryAccuracy(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE)
+
+    # with torch.autograd.detect_anomaly():
+    #     if conf.TRAIN:
+    #         describe_dataset(train_dataset)
+    #         model.train()
+    #         train(model, conf.DEVICE, loss_fn, train_loader, optimizer, conf.EPOCHS, train_acc)
+    #         if conf.SAVE_MODEL:
+    #             torch.save(model.state_dict(), conf.MODEL_PATH)
+    #
+    #     if conf.TEST:
+    #         describe_dataset(test_dataset)
+    #         if conf.LOAD_MODEL:
+    #             model = CamNet2(model_name=conf.MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=conf.DEVICE)
+    #             model.load_state_dict(torch.load(conf.MODEL_PATH, weights_only=True))
+    #         model.eval()
+    #         test(model, conf.DEVICE, test_loader, test_acc)
+    #         print(f"Test accuracy: {test_acc.compute()}")
+
 
     if conf.TRAIN:
         describe_dataset(train_dataset)
@@ -115,7 +141,7 @@ def run_camnet():
     if conf.TEST:
         describe_dataset(test_dataset)
         if conf.LOAD_MODEL:
-            model = CamNet(model_name=conf.MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=conf.DEVICE)
+            model = CamNet2(model_name=conf.MODEL_NAME, pretrained=True, num_aux_inputs=1).to(device=conf.DEVICE)
             model.load_state_dict(torch.load(conf.MODEL_PATH, weights_only=True))
         model.eval()
         test(model, conf.DEVICE, test_loader, test_acc)
