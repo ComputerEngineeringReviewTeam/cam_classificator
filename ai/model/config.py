@@ -7,7 +7,7 @@ datasetFilterSet = flt.Filters()
 # Paths
 os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CAM_ROOT = os.environ["CAM_ROOT"]
-DATA_DIR = os.path.join(CAM_ROOT, "data", "new_data")
+DATA_DIR = os.path.join(CAM_ROOT, "data")
 LABELS_PATH = os.path.join(DATA_DIR, "data.json")
 IMG_DIR = os.path.join(DATA_DIR, "photos")
 MODEL_PATH = os.path.join(CAM_ROOT, "ai", "saved_models", "camnet.pth")
@@ -22,6 +22,7 @@ TARGET_SIZE = (224, 224)  # (width, height) to resize images to
 MODEL_NAME = "resnet18"  # Model name from torchvision.models
 DROPOUT = 0.2  # Dropout rate for torch.nn.Dropout layers
 FEATURES = 256  # Number of features in the deep layer
+NUM_AUX_INPUTS = 0
 
 # Training config
 TRAIN = True  # Set to True to train the model
@@ -39,8 +40,9 @@ BINARY_ACCURACY_THRESHOLD = 0.5  # Threshold for binary accuracy metric
 
 #Config for the image filters (applied before feeding the image into the network)
 (datasetFilterSet
- .addFilter(flt.MatrixFilter([0, 0, 0, 0, 1, 0, 0, 0, 0]))
- #.addFilter(flt.MatrixFilter([0, 0, 0, 0, 1, 0, 0, 0, 0]))
+.addFilter(flt.StandardPILFilter(flt.CONTOUR))
+# .addFilter(flt.MatrixFilter([0, -1, 0, -1, 4, -1, 0, -1, 0]))
+# .addFilter(flt.MatrixFilter([-1, -1, -1, -1, 8, -1, -1, -1, -1]))
  )
 DISPLAY_IMAGES_BEFORE_FILTERS = False
 DISPLAY_IMAGES_AFTER_FILTERS = False

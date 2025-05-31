@@ -27,12 +27,12 @@ class CamNet2(torch.nn.Module):
             torch.nn.Linear(conf.FEATURES, 1),
         )
 
-        self.random_trans = transforms.Compose([
-            transforms.RandomRotation(30),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2)
-        ])
+        # self.random_trans = transforms.Compose([
+        #     transforms.RandomRotation(30),
+        #     transforms.RandomHorizontalFlip(),
+        #     transforms.RandomVerticalFlip(),
+        #     transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2)
+        # ])
 
     def forward(self, inputs):
         image, scale = inputs
@@ -46,8 +46,6 @@ class CamNet2(torch.nn.Module):
         binary_output = self.classifier(combined_features)
         regression_output = self.regressor(combined_features)
 
-        if binary_output[0].isnan():
-            print("PANIC")
-
         return binary_output, regression_output
-        # return binary_output, 0
+        # return binary_output, torch.tensor([0])
+        # return torch.tensor([0]), regression_output

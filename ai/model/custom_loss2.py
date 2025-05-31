@@ -10,7 +10,7 @@ class CustomLoss2(nn.Module):
         self.ce_loss = nn.CrossEntropyLoss()
 
     def forward(self, binary_output, regression_output, binary_target, regression_target):
-        binary_loss = self.bce_loss(binary_output, binary_target)
+        # binary_loss = self.bce_loss(binary_output, binary_target)
 
 
         # mask = ~torch.isnan(regression_target)
@@ -21,7 +21,8 @@ class CustomLoss2(nn.Module):
 
             # print(f"binary_loss={binary_loss.item()}\tregression_loss={ regression_loss.item()}")
 
-        total_loss = binary_loss + regression_loss
+        # total_loss = binary_loss + regression_loss
+        total_loss = regression_loss
         return total_loss
 
 
