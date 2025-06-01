@@ -2,3 +2,8 @@ Flask
 Flask-WTF
 python-dotenv
 Flask-CORS
+Flask-Login
+Flask-SQLAlchamy
+Flask-Migrate
+Flask-Bcrypt
+psycopg2
