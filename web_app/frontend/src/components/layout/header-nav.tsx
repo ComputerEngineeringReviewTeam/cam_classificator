@@ -10,10 +10,10 @@ const HeaderNav: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/cam/login');
+      navigate('/cam');
     } catch (error) {
       console.error("Failed to logout:", error);
-      // Handle error display if needed
+      navigate('/cam');
     }
   };
 
@@ -27,17 +27,17 @@ const HeaderNav: React.FC = () => {
           {currentUser && <NavItem name="Classificator" href="/cam/classificator" />}
 
           {isLoading ? (
-            <li className="mx-4 text-xl font-bold">Loading...</li>
+            <li className="mx-4 py-2 px-4 text-xl font-bold">Loading...</li>
           ) : currentUser ? (
             <>
               {currentUser.is_admin && (
                 <NavItem name="Manage Users" href="/cam/admin/users" />
               )}
-              <li className="mx-4 text-xl">
-                <span className="mr-2">Hi, {currentUser.username}!</span>
+              <li className="mx-4 flex items-center">
+                <span className="mr-3 py-2 text-xl font-bold">Hi, {currentUser.username}!</span>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm"
+                  className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded text-lg transition-transform duration-200 ease-in-out hover:scale-105 active:scale-105"
                 >
                   Logout
                 </button>

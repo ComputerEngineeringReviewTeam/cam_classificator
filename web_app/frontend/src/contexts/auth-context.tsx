@@ -13,7 +13,7 @@ interface AuthContextType {
   login: (usernameOrEmail: string, password: string) => Promise<User>;
   logout: () => Promise<void>;
   isLoading: boolean;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>; // To update user after profile edit etc.
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

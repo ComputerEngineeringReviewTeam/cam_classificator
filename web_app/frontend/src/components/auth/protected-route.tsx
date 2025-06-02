@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/auth-context';
 
 interface ProtectedRouteProps {
   adminOnly?: boolean;
-  children?: React.ReactNode; // To allow wrapping single components if needed
+  children?: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ adminOnly = false, children }) => {
@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ adminOnly = false, chil
   }
 
   if (!currentUser) {
-    return <Navigate to="/cam/login" state={{ from: location }} replace />;
+    return <Navigate to="/cam" state={{ from: location }} replace />;
   }
 
   if (adminOnly && !currentUser.is_admin) {
