@@ -1,1 +1,0 @@
-from backend.app.config import Config, get_config

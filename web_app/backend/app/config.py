@@ -29,5 +29,13 @@ class ConfigSettings:
 
         self.SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+        self.ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
+        if not self.ADMIN_USERNAME:
+            raise Exception("ERROR: ADMIN_USERNAME environment variable not set")
+
+        self.ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+        if not self.ADMIN_PASSWORD:
+            raise Exception("ERROR: ADMIN_PASSWORD environment variable not set")
+
 
 Config = ConfigSettings()
