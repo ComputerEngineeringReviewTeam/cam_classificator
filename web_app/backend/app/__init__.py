@@ -15,26 +15,11 @@ def create_app(config_object=Config):
     app = Flask(__name__, static_folder=os.path.join(REACT_BUILD_DIR, 'static'))
     app.config.from_object(config_object)
 
-    # # --- Your JSONEncoder Fix ---
-    # def _default(self, obj):
-    #     return getattr(obj.__class__, "__json__", _default.default)(obj)
-    # _default.default = JSONEncoder().default
-    # # Apply the monkey patch or set app.json_encoder
-    # JSONEncoder.default = _default
-    # Alternatively: app.json_encoder = YourCustomJSONEncoder
-
     # --- Initialize Extensions ---
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
     cors.init_app(app, resources={r"/cam/api/*": {"origins": "*"}}, supports_credentials=True) # Example
-
-    # --- CORS Configuration (from your run.py) ---
-    # if app.config['DEBUG']: # Access DEBUG from LoadedConfig
-    #     cors.init_app(app, resources={r"/cam/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
-    # else:
-    #     # Define your production CORS policy
-    #     #cors.init_app(app, resources={r"/cam/api/*": {"origins": "*"}}, supports_credentials=True) # Example
 
     # --- Registering Blueprints ---
     from .domain.auth import auth_bp

@@ -12,7 +12,6 @@ class User(UserMixin, db.Model):
         self.username = username
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         self.is_admin = is_admin
-        # super().__init__() TODO: Check if neccessary
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)

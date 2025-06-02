@@ -42,4 +42,4 @@ def status():
             user={'id': current_user.id, 'username': current_user.username, 'is_admin': current_user.is_admin}
         ), 200
     else:
-        return jsonify(logged_in=False), 200 # Or 401 if you prefer frontend to react to error
+        return jsonify(logged_in=False), 200
