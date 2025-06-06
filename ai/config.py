@@ -1,6 +1,9 @@
 import os
 import torch
+from typing import Literal
+
 import ai.utils.filters as flt
+import ai.utils.transforms as tf
 
 
 # Environment config
@@ -12,11 +15,19 @@ DATA_DIR = os.path.join(CAM_ROOT, "data", "scraped-2025-06-03")
 LABELS_PATH = os.path.join(DATA_DIR, "data.json")
 IMG_DIR = os.path.join(DATA_DIR, "photos")
 MODEL_PATH = os.path.join(CAM_ROOT, "ai", "saved_models", "camnet.pth")
+MODELS_DIR = os.path.join(CAM_ROOT, "ai", "saved_models")
 
 # Device config
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-print("Cuda available?", torch.cuda.is_available())
+print("Cuda available?", DEVICE)
 
+
+# Model config
+MODEL_NAME = "resnet18"  # Model name from torchvision.models
+DROPOUT = 0.2  # Dropout rate for torch.nn.Dropout layers
+FEATURES = 256  # Number of features in the deep layer
+NUM_AUX_INPUTS = 0
+MODE: Literal['both', 'regressor', 'classifier'] = 'both' # Controls model, loss and metrics
 
 # Data config
 TARGET_SIZE = (224, 224)  # (width, height) to resize images to
@@ -33,12 +44,9 @@ datasetFilterSet = flt.Filters()
 DISPLAY_IMAGES_BEFORE_FILTERS = False
 DISPLAY_IMAGES_AFTER_FILTERS = False
 
-# Model config
-MODEL_NAME = "resnet18"  # Model name from torchvision.models
-DROPOUT = 0.2  # Dropout rate for torch.nn.Dropout layers
-FEATURES = 256  # Number of features in the deep layer
-NUM_AUX_INPUTS = 0
-
+# Transforms
+TRAIN_TF = tf.CamTransforms.Train.grayscale
+TEST_TF = tf.CamTransforms.Test.grayscale
 
 # Training config
 TRAIN = True  # Set to True to train the model

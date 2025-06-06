@@ -1,7 +1,7 @@
 import torch
 
 import ai.config as conf
-from ai.utils.metrics import CamMetricCollector
+from ai.metrics.metric_collector import CamMetricCollector
 from ai.utils.dataset_helpers import prepare_tensors
 
 def test(model: torch.nn.Module,

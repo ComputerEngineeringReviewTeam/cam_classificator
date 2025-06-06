@@ -1,0 +1,4 @@
+from camnet import CamNet
+from camnet_classifier import CamNetClassifier
+from camnet_regressor import CamNetRegressor
+from camnet_conv import CamNetConv

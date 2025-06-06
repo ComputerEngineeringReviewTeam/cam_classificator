@@ -10,7 +10,7 @@ class CamNet(torch.nn.Module):
                  model_name,
                  mode: Literal['both', 'classifier', 'regressor'] ='both',
                  pretrained=True,
-                 num_aux_inputs=1, ):
+                 num_aux_inputs=1):
         """
         Initialize CamNet model
 

@@ -1,22 +1,21 @@
 import torch
-import torchmetrics as metrics
 
 import ai.config as conf
 from ai.dataset.cam_dataset import CamDataset
 from ai.dataset.cam_label import JsonLabelLoader
-from ai.model.camnet_regressor import CamNetRegressor
-from ai.loss_fn.camloss_regressor import CamLossRegressor
+from ai.model import CamNet, CamNetConv
+from ai.loss_fn import CamLoss
 from ai.utils.dataset_helpers import to_dataloaders, describe_dataset, sample_labels
-from ai.utils.metrics import *
 from ai.utils.train_loop import train
 from ai.utils.test_loop import test
 from ai.utils.transforms import CamTransforms
+from ai.metrics.metrics_colls import MetricsCollections
 
 
 def run_camnet():
     # Transforms for the images used
-    train_tsfms = CamTransforms.Train.grayscale
-    test_tsfms = CamTransforms.Test.grayscale
+    train_tsfms = conf.TRAIN_TF
+    test_tsfms = conf.TEST_TF
 
     # Create datasets and dataloaders for loading the data using shortcut functions
     data_df = JsonLabelLoader().load(conf.LABELS_PATH)
@@ -26,27 +25,15 @@ def run_camnet():
     train_loader, test_loader = to_dataloaders(train_dataset, test_dataset, batch_size=conf.BATCH_SIZE)
 
     # Create the model, optimizer and loss function
-    model = CamNetRegressor(model_name=conf.MODEL_NAME,
-                            pretrained=True,
-                            num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
+    model = CamNet(model_name=conf.MODEL_NAME,
+                   mode=conf.MODE,
+                   pretrained=True,
+                   num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=conf.LEARNING_RATE)
-    loss_fn = CamLossRegressor()
+    loss_fn = CamLoss(mode=conf.MODE)
 
     # Create the metrics used for testing the model
-    metric_aggregator = CamMetricCollector(
-        classification_metrics=[
-            BinaryMetrics(),
-            metrics.classification.BinaryAccuracy(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE),
-            metrics.classification.BinaryRecall(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE),
-            metrics.classification.BinaryPrecision(threshold=conf.BINARY_ACCURACY_THRESHOLD).to(device=conf.DEVICE),
-        ], regression_metrics=[
-            metrics.regression.MeanSquaredError().to(device=conf.DEVICE),
-            metrics.regression.MeanAbsoluteError().to(device=conf.DEVICE),  # average error
-            metrics.regression.NormalizedRootMeanSquaredError().to(device=conf.DEVICE),  # standard deviation
-            metrics.regression.R2Score().to(device=conf.DEVICE),  # ~accuracy
-            RelativeError(),
-            AverageRelativeError()
-        ])
+    metric_aggregator = MetricsCollections.std
 
     # Run training loop
     if conf.TRAIN:
@@ -60,9 +47,10 @@ def run_camnet():
     if conf.TEST:
         describe_dataset(test_dataset)
         if conf.LOAD_MODEL:
-            model = CamNetRegressor(model_name=conf.MODEL_NAME,
-                                    pretrained=True,
-                                    num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
+            model = CamNet(model_name=conf.MODEL_NAME,
+                           mode=conf.MODE,
+                           pretrained=True,
+                           num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
             model.load_state_dict(torch.load(conf.MODEL_PATH, weights_only=True))
         model.eval()
         test(model, test_loader, metric_aggregator)
