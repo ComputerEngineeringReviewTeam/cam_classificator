@@ -7,8 +7,8 @@ from urllib.parse import urljoin
 
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
 # BASE_URL = "http://127.0.0.1:5000/cam"
-# SAVE_DIR = f"../data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
-SAVE_DIR = os.environ["DATA_DIR"]
+SAVE_DIR = f"../data/scraped-{datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')}/"
+# SAVE_DIR = os.environ["DATA_DIR"]
 
 session = requests.Session()
 
@@ -28,7 +28,10 @@ def fetch_data() -> dict:
         id_end = all_response.text.find('</h2>', id_index)
         data_id = all_response.text[id_index + len('Id: '):id_end]
 
-        result[data_id] = fetch_datapoint(data_id)
+        try:
+            result[data_id] = fetch_datapoint(data_id)
+        except Exception as e:
+            print(e, data_id)
     return result
 
 

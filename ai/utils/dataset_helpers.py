@@ -1,11 +1,42 @@
 import pandas as pd
 from pandas import DataFrame
+import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose
 
 from ai.dataset.cam_dataset import CamDataset
 from ai.dataset.cam_label import ColumnNames
 from ai.model.config import datasetFilterSet
+
+
+def prepare_tensors(image: torch.Tensor,
+                    scale: torch.Tensor,
+                    binary_target: torch.Tensor,
+                    regression_target: torch.Tensor,
+                    device: str):
+    """
+    Moves tensors to device and reshapes binary_target to have 2 dimensions
+
+    ! Reshaping must be done after moving to device !
+
+    Args:
+        image: torch.Tensor
+        scale: torch.Tensor
+        binary_target: torch.Tensor
+        regression_target: torch.Tensor
+        device: str
+
+    Returns:
+        image: torch.Tensor
+        scale: torch.Tensor
+        binary_target: torch.Tensor
+        regression_target: torch.Tensor
+    """
+
+    image, scale = image.to(device), scale.to(device)
+    binary_target, regression_target = binary_target.to(device), regression_target.to(device)
+    binary_target = binary_target.unsqueeze(1)
+    return image, scale, binary_target, regression_target
 
 
 def train_test_sample(all_labels: DataFrame,

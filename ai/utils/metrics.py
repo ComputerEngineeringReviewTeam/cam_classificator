@@ -56,6 +56,7 @@ class BinaryMetrics:
 
 
 class RelativeError:
+    """BROKEN - DO NOT USE"""
     def __init__(self):
         self.target_sum = 0.0
         self.difference_sum = 0.0
@@ -108,14 +109,14 @@ class AverageRelativeError:
                                     self.targets[nonzero_mask])
         return f"avg. error: {relative_errors.mean()}, skipped {zeros_count} targets == 0"
 
-
-# def CentralMoment:
-#     def __init__(self, level):
-#         self.level = level
-#         self.mean = 0.0
-#         self.
-
-class CamMetricAggregator:
+class CamMetricCollector:
+    """
+    Class for easily storing and running multiple metrics on CamNet model.
+    'classification_metrics' will be computed on the results of model's binary classification, and
+    'regression_metrics' on the regression results.
+    All metrics should either be torchmetrics.Metric or implement __call__, reset() and compute() methods.
+    Operations on this class are run on each of the collected metrics.
+    """
     def __init__(self,
                  classification_metrics: list[mtr.Metric],
                  regression_metrics: list[mtr.Metric]):
