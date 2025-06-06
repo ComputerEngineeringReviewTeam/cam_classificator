@@ -55,6 +55,8 @@ def train(model: torch.nn.Module,
                                                                              regression_target, device)
             binary_output, regression_output = model((image, scale))  # model.random_trans(image)
             loss = loss_fn(binary_output, regression_output, binary_target, regression_target)
+            # reg_output = model(image)
+            # loss = loss_fn(reg_output, binary_target)
 
             optimizer.zero_grad()
             loss.backward()
@@ -72,8 +74,10 @@ def test(model: torch.nn.Module,
             image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
                                                                              regression_target, device)
             binary_output, regression_output = model((image, scale))
+            # regression_output = model(image)
 
             metric_aggregator(binary_output, regression_output, binary_target, regression_target)
+            # metric_aggregator(0, regression_output, 0, regression_target)
 
 
 def run_camnet():

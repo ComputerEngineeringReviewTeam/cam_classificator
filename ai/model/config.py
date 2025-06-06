@@ -7,7 +7,7 @@ datasetFilterSet = flt.Filters()
 # Paths
 os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CAM_ROOT = os.environ["CAM_ROOT"]
-DATA_DIR = os.path.join(CAM_ROOT, "data")
+DATA_DIR = os.path.join(CAM_ROOT, "data", "scraped-2025-06-03")
 LABELS_PATH = os.path.join(DATA_DIR, "data.json")
 IMG_DIR = os.path.join(DATA_DIR, "photos")
 MODEL_PATH = os.path.join(CAM_ROOT, "ai", "saved_models", "camnet.pth")
@@ -17,6 +17,7 @@ print("Cuda available?", torch.cuda.is_available())
 
 # Data config
 TARGET_SIZE = (224, 224)  # (width, height) to resize images to
+ONLY_GOOD = True
 
 # Model config
 MODEL_NAME = "resnet18"  # Model name from torchvision.models
@@ -29,9 +30,9 @@ TRAIN = True  # Set to True to train the model
 SAVE_MODEL = True  # Set to True to save the model to MODEL_PATH
 LEARNING_RATE = 1e-3  # Learning rate for optimizer
 EPOCHS = 10  # Number of epochs to train for
-BATCH_SIZE = 5  # Dataloader batch size
-TRAIN_FRACTION = 0.8  # Fraction of data to use for training
-RANDOM_SEED = 1234  # Random seed used to split data into train/test sets, used for reproducibility
+BATCH_SIZE = 16  # Dataloader batch size
+TRAIN_FRACTION = 0.05  # Fraction of data to use for training
+RANDOM_SEED = 21414161  # Random seed used to split data into train/test sets, used for reproducibility
 
 # Test config
 TEST = True  # Set to True to test the model
@@ -40,9 +41,9 @@ BINARY_ACCURACY_THRESHOLD = 0.5  # Threshold for binary accuracy metric
 
 #Config for the image filters (applied before feeding the image into the network)
 (datasetFilterSet
-.addFilter(flt.StandardPILFilter(flt.CONTOUR))
+# .addFilter(flt.StandardPILFilter(flt.CONTOUR))
 # .addFilter(flt.MatrixFilter([0, -1, 0, -1, 4, -1, 0, -1, 0]))
-# .addFilter(flt.MatrixFilter([-1, -1, -1, -1, 8, -1, -1, -1, -1]))
+.addFilter(flt.MatrixFilter([-1, -1, -1, -1, 8, -1, -1, -1, -1]))
  )
 DISPLAY_IMAGES_BEFORE_FILTERS = False
 DISPLAY_IMAGES_AFTER_FILTERS = False

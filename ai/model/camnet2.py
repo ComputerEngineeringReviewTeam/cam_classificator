@@ -12,13 +12,13 @@ class CamNet2(torch.nn.Module):
         self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
         feature_dim = self.feature_extractor.num_features
 
-        self.classifier = torch.nn.Sequential(
-            torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(conf.DROPOUT),
-            torch.nn.Linear(conf.FEATURES, 1),
-            torch.nn.Sigmoid()
-        )
+        # self.classifier = torch.nn.Sequential(
+        #     torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
+        #     torch.nn.ReLU(),
+        #     torch.nn.Dropout(conf.DROPOUT),
+        #     torch.nn.Linear(conf.FEATURES, 1),
+        #     torch.nn.Sigmoid()
+        # )
 
         self.regressor = torch.nn.Sequential(
             torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
@@ -43,9 +43,9 @@ class CamNet2(torch.nn.Module):
         # combined_features = torch.cat((image_features, scale), dim=1)
         combined_features = image_features
 
-        binary_output = self.classifier(combined_features)
+        # binary_output = self.classifier(combined_features)
         regression_output = self.regressor(combined_features)
 
-        return binary_output, regression_output
+        # return binary_output, regression_output
         # return binary_output, torch.tensor([0])
-        # return torch.tensor([0]), regression_output
+        return torch.tensor([0]), regression_output

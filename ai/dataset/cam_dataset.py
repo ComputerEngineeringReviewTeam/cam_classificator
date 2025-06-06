@@ -2,8 +2,8 @@ import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 from pandas import DataFrame
-from ai.model.config import *
 
+from ai.model.config import *
 import utils.filters as filters
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
 from ai.dataset.dataset_utils import normalize_minmax
@@ -31,7 +31,8 @@ class CamDataset(Dataset):
                  imageFilterSet: flt.Filters | None = None,
                  dtype = torch.float32,):
         self.labels = labels
-        # self.labels = labels[labels[ColumnNames.IsGood] == True]
+        if ONLY_GOOD:
+            self.labels = labels[labels[ColumnNames.IsGood] == True]
         self.img_dir = img_dir
         self.transform = transform
         self.imageFilterSet = imageFilterSet
@@ -117,6 +118,7 @@ class CamDataset(Dataset):
             column_tensor = torch.tensor(self.labels[column_name].values, dtype=self.dtype)
             special_value_mask = column_tensor == value_to_nan
             normalized_column_tensor = normalize_minmax(column_tensor)
+            # normalized_column_tensor = column_tensor
             normalized_column_tensor[special_value_mask] = float('nan')
             labels_as_tensor.append(normalized_column_tensor)
         tensor_labels = torch.column_stack(labels_as_tensor)
