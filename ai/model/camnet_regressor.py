@@ -1,7 +1,7 @@
 import torch
 import timm
 
-import ai.model.config as conf
+import ai.config as conf
 
 
 class CamNetRegressor(torch.nn.Module):

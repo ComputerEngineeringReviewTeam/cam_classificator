@@ -1,10 +1,8 @@
-import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 from pandas import DataFrame
 
-from ai.model.config import *
-import utils.filters as filters
+from ai.config import *
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
 
 

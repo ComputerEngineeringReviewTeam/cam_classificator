@@ -1,8 +1,4 @@
 import torch
-import timm
-import torchvision.transforms as transforms
-
-import ai.model.config as conf
 
 
 class CamNetConv(torch.nn.Module):

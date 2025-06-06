@@ -2,7 +2,7 @@ import torch
 import timm
 from typing import Literal
 
-import ai.model.config as conf
+import ai.config as conf
 
 
 class CamNet(torch.nn.Module):

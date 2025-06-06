@@ -1,6 +1,6 @@
 import torch
 
-import ai.model.config as conf
+import ai.config as conf
 from ai.utils.dataset_helpers import prepare_tensors
 
 def train(model: torch.nn.Module,

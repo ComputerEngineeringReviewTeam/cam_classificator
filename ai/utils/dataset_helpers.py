@@ -6,7 +6,7 @@ from torchvision.transforms import Compose
 
 from ai.dataset.cam_dataset import CamDataset
 from ai.dataset.cam_label import ColumnNames
-from ai.model.config import datasetFilterSet
+from ai.config import datasetFilterSet
 
 
 def prepare_tensors(image: torch.Tensor,
