@@ -9,7 +9,8 @@ from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonL
 COLUMNS_TO_NUM_LABELS = [ColumnNames.BranchingPoints]
 
 def normalize_minmax(column_tensor, new_max=1.0, new_min=0.0):
-    amin, amax = torch.amin(column_tensor), torch.amax(column_tensor)
+    # amin, amax = torch.amin(column_tensor), torch.amax(column_tensor)
+    amin, amax = 0.0, 14.0
     normalized_column_tensor = ((column_tensor - amin) / (amax - amin)) * (new_max - new_min) + new_min
     return normalized_column_tensor
 
@@ -70,6 +71,8 @@ class CamDataset(Dataset):
             self.labels = labels[labels[ColumnNames.IsGood] == True]
         else:
             self.labels = labels
+
+        # self.labels = labels[labels[ColumnNames.BranchingPoints] <= 15]
 
         self.tensor_labels = self.normalize_and_nanize_labels(-1.0, COLUMNS_TO_NUM_LABELS)
 

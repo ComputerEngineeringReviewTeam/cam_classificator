@@ -1,8 +1,9 @@
 import torchmetrics as metrics
+import os
 
 import ai.config as conf
 from ai.dataset.cam_dataset import CamDataset
-from ai.model import CamNet, CamNetConv
+from ai.model import CamNet, CamNetConv, CamNetRegressor
 from ai.utils.dataset_helpers import describe_dataset
 from ai.metrics.metrics import *
 from ai.utils.test_loop import test
@@ -12,7 +13,7 @@ from ai.metrics.metrics_colls import MetricsCollections
 
 def run_camnet():
     # Transforms for the images used
-    test_tsfms = CamTransforms.Test.grayscale
+    test_tsfms = CamTransforms.Test.std
 
     # Create datasets and dataloaders for loading the data using shortcut functions
     test_dataset = CamDataset.from_json(labels_path=conf.LABELS_PATH,
@@ -23,14 +24,15 @@ def run_camnet():
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=conf.BATCH_SIZE)
 
     # Create the model
-    model = CamNet(model_name=conf.MODEL_NAME,
-                   mode=conf.MODE,
+    model = CamNetRegressor(model_name=conf.MODEL_NAME,
                    pretrained=True,
                    num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
-    model.load_state_dict(torch.load(conf.MODEL_PATH, weights_only=True))
+    model.load_state_dict(torch.load(os.path.join(conf.CAM_ROOT, "ai", "saved_models_conv",
+                                                  "reg_g_0661.pth"),
+                                     weights_only=True))
 
     # Create the metrics used for testing the model
-    metric_aggregator = MetricsCollections.std
+    metric_aggregator = MetricsCollections.only_regressor
 
     # Run testing loop
     describe_dataset(test_dataset)

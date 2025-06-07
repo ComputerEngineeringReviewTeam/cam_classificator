@@ -103,9 +103,36 @@ class AverageRelativeError:
         self.targets = None
 
     def compute(self):
+        # print("OUT", self.outputs)
+        # print("TAR", self.targets)
+
         nonzero_mask = (self.targets != 0)
         zeros_count = self.targets.size(dim=0) - torch.count_nonzero(self.targets)
         relative_errors = torch.div(torch.abs(self.outputs[nonzero_mask] - self.targets[nonzero_mask]),
                                     self.targets[nonzero_mask])
         return f"avg. error: {relative_errors.mean()}, skipped {zeros_count} targets == 0"
 
+
+class AverageError:
+    def __init__(self):
+        self.outputs = None
+        self.targets = None
+
+    def __call__(self, output: torch.Tensor, target: torch.Tensor):
+        if self.outputs is None:
+            self.outputs = output
+        else:
+            self.outputs = torch.cat((self.outputs, output), dim=0)
+
+        if self.targets is None:
+            self.targets = target
+        else:
+            self.targets = torch.cat((self.targets, target), dim=0)
+
+    def reset(self):
+        self.outputs = None
+        self.targets = None
+
+    def compute(self):
+        relative_errors = torch.abs(self.outputs - self.targets)
+        return f"avg. error: {relative_errors.mean()}"

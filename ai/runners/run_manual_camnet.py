@@ -5,8 +5,8 @@ import torchmetrics as metrics
 import ai.config as conf
 from ai.dataset.cam_dataset import CamDataset
 from ai.dataset.cam_label import JsonLabelLoader
-from ai.model import CamNet, CamNetConv
-from ai.loss_fn import CamLoss
+from ai.model import CamNet, CamNetConv, CamNetRegressor
+from ai.loss_fn import CamLoss, CamLossRegressor
 from ai.utils.dataset_helpers import to_dataloaders, describe_dataset, sample_labels
 from ai.utils.train_loop import train
 from ai.utils.test_loop import test
@@ -24,18 +24,19 @@ def run_manual_camnet():
     train_data, test_data = sample_labels(data_df, conf.TRAIN_FRACTION, conf.RANDOM_SEED, balanced=conf.BALANCED_SPLIT)
     train_dataset = CamDataset(train_data, conf.IMG_DIR, train_tsfms, conf.datasetFilterSet)
     test_dataset = CamDataset(test_data, conf.IMG_DIR, test_tsfms, conf.datasetFilterSet)
+    full_dataset = CamDataset(data_df, conf.IMG_DIR, test_tsfms, conf.datasetFilterSet)
     train_loader, test_loader = to_dataloaders(train_dataset, test_dataset, batch_size=conf.BATCH_SIZE)
+    full_loader = torch.utils.data.DataLoader(full_dataset, batch_size=conf.BATCH_SIZE)
 
     # Create the model, optimizer and loss function
-    model = CamNet(model_name=conf.MODEL_NAME,
-                   mode=conf.MODE,
+    model = CamNetRegressor(model_name=conf.MODEL_NAME,
                    pretrained=True,
                    num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
     optimizer = torch.optim.Adam(model.parameters(), lr=conf.LEARNING_RATE)
-    loss_fn = CamLoss(mode=conf.MODE)
+    loss_fn = CamLossRegressor()
 
     # Create the metrics used for testing the model
-    metric_aggregator = MetricsCollections.std
+    metric_aggregator = MetricsCollections.only_regressor
 
     # Run the manual loop
     while True:
@@ -48,12 +49,13 @@ def run_manual_camnet():
         elif input_str == 'l':
             filename = input("Enter filename: ")
             try:
-                new_model = CamNet(model_name=conf.MODEL_NAME,
-                               mode=conf.MODE,
+                new_model = CamNetRegressor(model_name=conf.MODEL_NAME,
                                pretrained=True,
                                num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
+                new_optimizer = torch.optim.Adam(new_model.parameters(), lr=conf.LEARNING_RATE)
                 new_model.load_state_dict(torch.load(os.path.join(conf.MODELS_DIR, filename), weights_only=True))
                 model = new_model
+                optimizer = new_optimizer
             except Exception as e:
                 print(e)
         elif input_str == 'tr':
@@ -69,6 +71,17 @@ def run_manual_camnet():
             test(model, test_loader, metric_aggregator)
             metric_aggregator.print_metrics()
             metric_aggregator.reset()
+        elif input_str == 'fl':
+            describe_dataset(full_dataset)
+            model.eval()
+            test(model, full_loader, metric_aggregator)
+            metric_aggregator.print_metrics()
+            metric_aggregator.reset()
+        elif input_str == 'rst':
+            model = CamNetRegressor(model_name=conf.MODEL_NAME,
+                                    pretrained=True,
+                                    num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
+            optimizer = torch.optim.Adam(model.parameters(), lr=conf.LEARNING_RATE)
 
 
 if __name__ == '__main__':
