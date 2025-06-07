@@ -42,7 +42,7 @@ class CamNet(torch.nn.Module):
                 torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
                 torch.nn.ReLU(),
                 torch.nn.Dropout(conf.DROPOUT),
-                torch.nn.Linear(conf.FEATURES, 4),
+                torch.nn.Linear(conf.FEATURES, 1),
             )
 
     def forward(self, inputs):

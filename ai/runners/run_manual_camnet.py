@@ -15,8 +15,6 @@ from ai.metrics.metrics_colls import MetricsCollections
 
 
 def run_manual_camnet():
-    MODELS_DIR = os.path.join(conf.CAM_ROOT, "ai", "saved_models")
-
     # Transforms for the images used
     train_tsfms = CamTransforms.Train.grayscale
     test_tsfms = CamTransforms.Test.grayscale
@@ -46,7 +44,7 @@ def run_manual_camnet():
             break
         elif input_str == "s":
             filename = input("Enter filename: ")
-            torch.save(model.state_dict(), os.path.join(MODELS_DIR, filename + ".pth"))
+            torch.save(model.state_dict(), os.path.join(conf.MODELS_DIR, filename + ".pth"))
         elif input_str == 'l':
             filename = input("Enter filename: ")
             try:
@@ -54,7 +52,7 @@ def run_manual_camnet():
                                mode=conf.MODE,
                                pretrained=True,
                                num_aux_inputs=conf.NUM_AUX_INPUTS).to(device=conf.DEVICE)
-                new_model.load_state_dict(torch.load(os.path.join(MODELS_DIR, filename), weights_only=True))
+                new_model.load_state_dict(torch.load(os.path.join(conf.MODELS_DIR, filename), weights_only=True))
                 model = new_model
             except Exception as e:
                 print(e)

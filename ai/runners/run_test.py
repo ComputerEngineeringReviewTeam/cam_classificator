@@ -12,7 +12,7 @@ from ai.metrics.metrics_colls import MetricsCollections
 
 def run_camnet():
     # Transforms for the images used
-    test_tsfms = conf.TEST_TF
+    test_tsfms = CamTransforms.Test.grayscale
 
     # Create datasets and dataloaders for loading the data using shortcut functions
     test_dataset = CamDataset.from_json(labels_path=conf.LABELS_PATH,

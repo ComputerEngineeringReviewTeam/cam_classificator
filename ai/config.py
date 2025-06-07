@@ -3,7 +3,6 @@ import torch
 from typing import Literal
 
 import ai.utils.filters as flt
-import ai.utils.transforms as tf
 
 
 # Environment config
@@ -43,10 +42,6 @@ datasetFilterSet = flt.Filters()
  )
 DISPLAY_IMAGES_BEFORE_FILTERS = False
 DISPLAY_IMAGES_AFTER_FILTERS = False
-
-# Transforms
-TRAIN_TF = tf.CamTransforms.Train.grayscale
-TEST_TF = tf.CamTransforms.Test.grayscale
 
 # Training config
 TRAIN = True  # Set to True to train the model

@@ -14,8 +14,8 @@ from ai.metrics.metrics_colls import MetricsCollections
 
 def run_camnet():
     # Transforms for the images used
-    train_tsfms = conf.TRAIN_TF
-    test_tsfms = conf.TEST_TF
+    train_tsfms = CamTransforms.Train.grayscale
+    test_tsfms = CamTransforms.Test.grayscale
 
     # Create datasets and dataloaders for loading the data using shortcut functions
     data_df = JsonLabelLoader().load(conf.LABELS_PATH)
