@@ -1,10 +1,10 @@
 from flask import request, jsonify
 from flask_login import login_required
 from . import classificator_bp
-from .services import classificate_image as service_classificate_image
+from .service import classificate_image as service_classificate_image
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'} # TODO: Verify this
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
 def allowed_file(filename):
@@ -30,7 +30,6 @@ def classificate_image():
 
     if allowed_file(file.filename):
         image_bytes = file.read()
-
         try:
             analysis_result_dto = service_classificate_image(
                 image_bytes=image_bytes,

@@ -5,7 +5,7 @@ from time import sleep
 
 from PIL import Image
 
-from .dto import ClassificationResult, SegmentData
+from backend.app.domain.classificator.dto import ClassificationResult, SegmentData
 
 SEGMENT_WIDTH = 224
 SEGMENT_HEIGHT = 224
@@ -13,16 +13,15 @@ SEGMENT_HEIGHT = 224
 
 def classificate_image(image_bytes: bytes) -> ClassificationResult:
     """
-    Processes the incoming image data and returns an analysis DTO.
+    ---------------------------------------------------- ------------------------------------------------------
+    This entry function for the classificator AI model. Change this however you see fit, just make sure, that
+    it returns a proper ClassificationResult object.
 
-    This is a mock service. Replace the logic inside this function with your
-    actual image analysis implementation.
+    In case of an error, just throw an exception with description. It will be printed out in the console,
+    and user will be informed about an unexpected error.
 
-    Args:
-        image_bytes: The raw bytes of the image file.
-
-    Returns:
-        An ClassificationResult DTO containing the analysis data.
+    All model files should be placed in this directory or new subdirectories.
+    ---------------------------------------------------- ------------------------------------------------------
     """
     print(f"Analyzing image of size {len(image_bytes)} bytes...")
 

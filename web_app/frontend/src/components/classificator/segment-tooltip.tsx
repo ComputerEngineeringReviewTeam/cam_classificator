@@ -26,7 +26,7 @@ const SegmentTooltip: React.FC<TooltipProps> = ({ segment, index }) => {
                       group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                       transition-all duration-75 ease-in-out
                       z-20 whitespace-nowrap pointer-events-none
-                      md:max-w-max w-24
+                      lg:w-44
                       ">
           <div className="font-bold text-sm mb-1 border-b border-gray-600 pb-1 text-wrap">Segment {index} ({isGoodText})</div>
           <p className="text-wrap">Branching Points: {formatNum(segment.branching_point)}</p>

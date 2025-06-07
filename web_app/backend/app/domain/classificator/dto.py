@@ -6,16 +6,16 @@ class SegmentData(BaseModel):
     """
     DTO for a single analyzed image segment.
     """
-    branching_point: int|None = None
-    is_good: bool|None = None
+    branching_point: int = None
+    is_good: bool = None
 
 
 class ClassificationResult(BaseModel):
     """
     The complete DTO returned by the classification API.
     """
-    branching_point_sum: int|None = None
-    is_good_percent: float|None = None
+    branching_point_sum: int = None
+    is_good_percent: float = None
     segment_width: int
     segment_height: int
     overflowed_segment_width: int

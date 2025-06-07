@@ -6,19 +6,34 @@ import SegmentTooltip from './segment-tooltip';
 interface GridCellProps {
   segment: SegmentData;
   index: number;
+  isColoringEnabled: boolean
 }
 
 
-const GridCell: React.FC<GridCellProps> = React.memo(({segment, index}) => {
-  const baseColor = segment.is_good === true ? 'green'
-    : segment.is_good === false ? 'red'
-      : 'gray';
-  const bgColorClass = baseColor === 'green' ? 'bg-green-500/20 hover:bg-green-500/40'
-    : baseColor === 'red' ? 'bg-red-500/20 hover:bg-red-500/40'
-      : 'bg-gray-500/10 hover:bg-gray-500/30';
-  const borderColorClass = baseColor === 'green' ? 'border-green-700'
-    : baseColor === 'red' ? 'border-red-700'
-      : 'border-gray-500';
+const GridCell: React.FC<GridCellProps> = React.memo(({segment, index, isColoringEnabled}) => {
+  const {bgColorClass, borderColorClass} = useMemo(() => {
+    if (!isColoringEnabled) {
+      return {
+        bgColorClass: 'bg-transparent',
+        borderColorClass: 'border-transparent'
+      };
+    }
+
+    const baseColor = segment.is_good === true ? 'green'
+      : segment.is_good === false ? 'red'
+        : 'gray';
+
+    const bg = baseColor === 'green' ? 'bg-green-500/20 hover:bg-green-500/40'
+      : baseColor === 'red' ? 'bg-red-500/20 hover:bg-red-500/40'
+        : 'bg-gray-500/10 hover:bg-gray-500/30';
+
+    const border = baseColor === 'green' ? 'border-green-700'
+      : baseColor === 'red' ? 'border-red-700'
+        : 'border-gray-500';
+
+    return {bgColorClass: bg, borderColorClass: border};
+  }, [isColoringEnabled, segment.is_good]);
+
 
   return (
     <div className={`relative group border-[1px] transition-colors duration-200 ${borderColorClass} ${bgColorClass}`}>
@@ -37,6 +52,7 @@ interface ImageDisplayProps {
 const ImageDisplay: React.FC<ImageDisplayProps> = ({imageUrl, analysisResult}) => {
   const [naturalImageWidth, setNaturalImageWidth] = useState<number | null>(null);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [isColoringEnabled, setIsColoringEnabled] = useState<boolean>(true);
 
   // Listen for window resize to update viewport width for responsiveness
   useEffect(() => {
@@ -127,6 +143,18 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({imageUrl, analysisResult}) =
         )}
       </h3>
 
+      {/* Button to toggle coloring */}
+      {analysisResult && (
+        <div className="flex justify-center mb-4">
+            <button
+                onClick={() => setIsColoringEnabled(prev => !prev)}
+                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
+            >
+                {isColoringEnabled ? 'Disable Coloring' : 'Enable Coloring'}
+            </button>
+        </div>
+      )}
+
       {analysisResult && (
         <div className="mt-4 mb-5 p-4 bg-gray-50/70 border border-gray-200/80 rounded-lg">
           <div className="flex justify-around items-start text-center">
@@ -165,7 +193,12 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({imageUrl, analysisResult}) =
             className="absolute top-0 left-0 w-full max-w-full h-full"
           >
             {analysisResult.segments.map((segment, index) => (
-              <GridCell key={index} segment={segment} index={index}/>
+              <GridCell
+                key={index}
+                segment={segment}
+                index={index}
+                isColoringEnabled={isColoringEnabled}
+              />
             ))}
           </div>
         )}
