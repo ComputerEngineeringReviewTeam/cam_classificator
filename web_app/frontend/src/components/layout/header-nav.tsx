@@ -22,7 +22,7 @@ const HeaderNav: React.FC = () => {
       <h1 className="m-0 text-3xl font-bold">CAM Classificator</h1>
 
       <nav className="flex-grow">
-        <ul className="list-none p-0 m-0 flex justify-center md:justify-end">
+        <ul className="list-none p-0 m-0 flex-row justify-center md:justify-end md:flex">
           <NavItem name="Home" href="/cam" />
           {currentUser && <NavItem name="Classificator" href="/cam/classificator" />}
 
@@ -33,7 +33,7 @@ const HeaderNav: React.FC = () => {
               {currentUser.is_admin && (
                 <NavItem name="Manage Users" href="/cam/admin/users" />
               )}
-              <li className="mx-4 flex items-center">
+              <li className="mx-4 md:flex items-center">
                 <span className="mr-3 py-2 text-xl font-bold">Hi, {currentUser.username}!</span>
                 <button
                   onClick={handleLogout}

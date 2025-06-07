@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/cam/api',
+  baseURL: process.env.REACT_APP_SERVER_ADDR + '/cam/api',
   withCredentials: true,
 });
 

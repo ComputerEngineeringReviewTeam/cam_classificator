@@ -98,7 +98,7 @@ const ClassificatorPage: React.FC = () => {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow disabled:opacity-50 w-full sm:w-auto"
+            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow disabled:opacity-50 w-full sm:w-auto break-words"
           >
             {selectedFile ? `File: ${selectedFile.name}` : 'Select Image'}
           </button>

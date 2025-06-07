@@ -36,23 +36,32 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
 
     num_cols = math.ceil(image_width / SEGMENT_WIDTH)
     num_rows = math.ceil(image_height / SEGMENT_HEIGHT)
+    overflowed_segment_width = math.ceil((num_cols * SEGMENT_WIDTH) - image_width)
+    overflowed_segment_height = math.ceil((num_rows * SEGMENT_HEIGHT) - image_height)
     total_segments = num_cols * num_rows
 
-    sleep(3)
+    branching_point_sum = 0
+    num_of_good = 0
+
+    sleep(1)
     mock_segments = []
     for _ in range(total_segments):
         segment = SegmentData(
-            branching_point=random.uniform(0.5, 5.0),
-            total_length=random.uniform(100.0, 1000.0),
-            mean_thickness=random.uniform(1.0, 10.0),
-            total_area=random.uniform(500.0, 5000.0),
+            branching_point=int(random.uniform(1, 300)),
             is_good=random.choice([True, False])
         )
+        branching_point_sum += segment.branching_point
+        if segment.is_good:
+            num_of_good += 1
         mock_segments.append(segment)
 
     result = ClassificationResult(
+        branching_point_sum=branching_point_sum,
+        is_good_percent=(num_of_good / total_segments) * 100,
         segment_width=SEGMENT_WIDTH,
         segment_height=SEGMENT_HEIGHT,
+        overflowed_segment_width=overflowed_segment_width,
+        overflowed_segment_height=overflowed_segment_height,
         num_cols=num_cols,
         num_rows=num_rows,
         segments=mock_segments
