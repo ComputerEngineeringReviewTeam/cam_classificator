@@ -44,7 +44,6 @@ def create_app(config_object=Config):
     return app
 
 
-# TODO: check for connection and show clean error
 def _initialize_database(current_app: Flask):
     """Initialize the database. Creates all schemas and creates the admin account"""
     with current_app.app_context():

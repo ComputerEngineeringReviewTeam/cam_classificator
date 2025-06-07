@@ -1,4 +1,3 @@
-// src/pages/ClassificatorPage.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import api from '../services/api';
 import { ClassificationResult } from '../models/classificator-responses';
@@ -119,7 +118,6 @@ const ClassificatorPage: React.FC = () => {
       </div>
 
       {/* --- Image & Overlay Display --- */}
-      {/* Only show if image exists AND we are not loading AND no error occurred during load */}
       {(imageUrl && !isLoading && (!error || analysisResult)) && (
         <ImageDisplay
           imageUrl={imageUrl}
