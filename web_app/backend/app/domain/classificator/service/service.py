@@ -5,7 +5,7 @@ from time import sleep
 
 from PIL import Image
 
-from backend.app.domain.classificator.dto import ClassificationResult, SegmentData
+from ..dto import ClassificationResult, SegmentData
 
 SEGMENT_WIDTH = 224
 SEGMENT_HEIGHT = 224
@@ -23,8 +23,6 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
     All model files should be placed in this directory or new subdirectories.
     ---------------------------------------------------- ------------------------------------------------------
     """
-    print(f"Analyzing image of size {len(image_bytes)} bytes...")
-
     try:
         with Image.open(io.BytesIO(image_bytes)) as img:
             image_width, image_height = img.size

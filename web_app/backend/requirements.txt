@@ -5,6 +5,7 @@ Flask-CORS
 Flask-Login
 Flask-SQLAlchemy
 Flask-Bcrypt
-psycopg2
+psycopg2-binary
 pydantic
 pillow
+gunicorn
