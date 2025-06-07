@@ -1,6 +1,5 @@
-// src/pages/home-page.tsx
 import React from 'react';
-import { useAuth } from '../contexts/auth-context';
+import { useAuth } from '../models/auth-context';
 
 const HomePage: React.FC = () => {
   const { currentUser } = useAuth();

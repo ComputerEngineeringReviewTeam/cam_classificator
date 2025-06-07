@@ -1,12 +1,10 @@
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory
 import os
-import click
 
 from .config import Config
 from .extensions import db, login_manager, cors, bcrypt
 from .domain.auth.models import User
 
-from flask_migrate import upgrade as migrate_upgrade, stamp as migrate_stamp
 from sqlalchemy import inspect as sqlalchemy_inspect
 
 REACT_BUILD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'build'))
@@ -28,6 +26,8 @@ def create_app(config_object=Config):
     from .domain.admin import admin_bp
     app.register_blueprint(admin_bp, url_prefix='/cam/api/admin')
 
+    from .domain.classificator import classificator_bp
+    app.register_blueprint(classificator_bp, url_prefix='/cam/api/classificator')
 
     # --- Serve React App ---
     @app.route('/cam', defaults={'path': ''})
@@ -44,6 +44,7 @@ def create_app(config_object=Config):
     return app
 
 
+# TODO: check for connection and show clean error
 def _initialize_database(current_app: Flask):
     """Initialize the database. Creates all schemas and creates the admin account"""
     with current_app.app_context():

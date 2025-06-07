@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { useAuth, User as AuthUser } from '../contexts/auth-context';
+import { useAuth, User as AuthUser } from '../models/auth-context';
 import CreateUserForm from '../components/admin/create-user-form';
 import UsersTable from '../components/admin/users-table';
-
-// If ManagedUser has specific differences from AuthUser for this page, define it
-// Otherwise, AuthUser can be used directly.
-// interface ManagedUser extends AuthUser {}
 
 const AdminUserManagementPage: React.FC = () => {
   const { currentUser } = useAuth();
   const [users, setUsers] = useState<AuthUser[]>([]);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false); // Specific loading state for the table
-  const [fetchUsersError, setFetchUsersError] = useState<string | null>(null); // Specific error state for the table
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const [fetchUsersError, setFetchUsersError] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setIsLoadingUsers(true);

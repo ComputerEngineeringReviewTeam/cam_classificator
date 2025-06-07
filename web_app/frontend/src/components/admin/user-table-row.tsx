@@ -1,5 +1,5 @@
 import React from 'react';
-import { User as AuthUser } from '../../contexts/auth-context';
+import { User as AuthUser } from '../../models/auth-context';
 
 interface UserTableRowProps {
   user: AuthUser;

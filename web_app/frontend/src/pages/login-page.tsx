@@ -1,6 +1,5 @@
-// src/pages/LoginPage.tsx
 import React, { useState, FormEvent } from 'react';
-import { useAuth } from '../contexts/auth-context';
+import { useAuth } from '../models/auth-context';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {

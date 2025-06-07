@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/auth-context';
+import { useAuth } from '../../models/auth-context';
 
 interface ProtectedRouteProps {
   adminOnly?: boolean;

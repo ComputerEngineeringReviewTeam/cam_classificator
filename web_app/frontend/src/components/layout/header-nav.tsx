@@ -1,6 +1,6 @@
 import React from 'react';
 import NavItem from './nav-item';
-import { useAuth} from "../../contexts/auth-context";
+import { useAuth} from "../../models/auth-context";
 import { useNavigate } from 'react-router-dom';
 
 const HeaderNav: React.FC = () => {

@@ -1,18 +1,16 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/layout';
 import HomePage from './pages/home-page';
 import NotFoundPage from './pages/not-found-page';
-import ForbiddenPage from './pages/forbidden';
+import ForbiddenPage from './pages/forbidden-page';
 import LoginPage from './pages/login-page';
 import UserManagementPage from "./pages/user-management-page";
+import ClassificatorPage from "./pages/classificator-page";
 import ProtectedRoute from './components/auth/protected-route';
 import './App.css';
 
-// TEMPORARY
-const ClassificatorPage: React.FC = () => <div><h2>Classificator (Protected)</h2><p>Only logged-in users can use the classificator.</p></div>;
 
-// add forbidden page
 const App: React.FC = () => {
   return (
     <Routes>

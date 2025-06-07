@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import api from '../../services/api';
-import { User as AuthUser } from '../../contexts/auth-context';
+import { User as AuthUser } from '../../models/auth-context';
 
 interface CreateUserFormProps {
   onUserCreated: (newUser: AuthUser) => void;

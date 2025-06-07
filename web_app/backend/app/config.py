@@ -5,7 +5,7 @@ class ConfigSettings:
     def __init__(self):
         env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
         if not dotenv.load_dotenv(dotenv_path=env_path):
-            raise Exception(f"ERROR: .env file not found at {env_path} or not loaded.")
+            print(".env file has not been found. Using environment variables instead.")
 
         self.DEBUG = bool(os.getenv('DEBUG'))
         if self.DEBUG is None:

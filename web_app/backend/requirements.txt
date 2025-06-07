@@ -3,6 +3,8 @@ Flask-WTF
 python-dotenv
 Flask-CORS
 Flask-Login
-Flask-SQLAlchamy
+Flask-SQLAlchemy
 Flask-Bcrypt
 psycopg2
+pydantic
+pillow
