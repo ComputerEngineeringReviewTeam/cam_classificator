@@ -12,10 +12,18 @@ import ai.utils.filters as flt
 COLUMNS_TO_NUM_LABELS = [ColumnNames.BranchingPoints]
 
 
-def normalize_minmax(column_tensor, new_max=1.0, new_min=0.0):
-    # amin, amax = torch.amin(column_tensor), torch.amax(column_tensor)
+def normalize_minmax(tensor,
+                     new_max=1.0,
+                     new_min=0.0,
+                     amin: float | None = None,
+                     amax: float | None = None):
     amin, amax = 0.0, 14.0
-    normalized_column_tensor = ((column_tensor - amin) / (amax - amin)) * (new_max - new_min) + new_min
+    if amin is None:
+        amin = torch.amin(tensor)
+    if amax is None:
+        amax = torch.amax(tensor)
+
+    normalized_column_tensor = ((tensor - amin) / (amax - amin)) * (new_max - new_min) + new_min
     return normalized_column_tensor
 
 
@@ -167,7 +175,6 @@ class CamDataset(Dataset):
             column_tensor = torch.tensor(self.labels[column_name].values, dtype=self.dtype)
             special_value_mask = column_tensor == value_to_nan
             normalized_column_tensor = normalize_minmax(column_tensor)
-            # normalized_column_tensor = column_tensor
             normalized_column_tensor[special_value_mask] = float('nan')
             labels_as_tensor.append(normalized_column_tensor)
         tensor_labels = torch.column_stack(labels_as_tensor)
