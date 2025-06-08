@@ -33,7 +33,7 @@ def run_camnet():
     loss_fn = CamLoss(mode=conf.MODE)
 
     # Create the metrics used for testing the model
-    metric_aggregator = MetricsCollections.std
+    metric_aggregator = MetricsCollections.only_regressor
 
     # Run training loop
     if conf.TRAIN:
