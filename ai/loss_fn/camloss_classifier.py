@@ -1,5 +1,6 @@
 import torch
 
+
 class CamLossClassifier(torch.nn.Module):
     def __init__(self):
         super(CamLossClassifier, self).__init__()

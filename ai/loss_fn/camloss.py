@@ -1,6 +1,7 @@
 import torch
 
-from ai.config import Modes
+from ai.utils.modes import Modes
+
 
 class CamLoss(torch.nn.Module):
     def __init__(self, mode: Modes = Modes.BOTH):

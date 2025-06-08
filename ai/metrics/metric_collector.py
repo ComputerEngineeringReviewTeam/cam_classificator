@@ -1,6 +1,9 @@
 import torch
 import torchmetrics as mtr
 
+from ai.utils.modes import Modes
+
+
 class CamMetricCollector:
     """
     Class for easily storing and running multiple metrics on CamNet model.
@@ -10,10 +13,20 @@ class CamMetricCollector:
     Operations on this class are run on each of the collected metrics.
     """
     def __init__(self,
-                 classification_metrics: list[mtr.Metric],
-                 regression_metrics: list[mtr.Metric]):
-        self.classification_metrics = classification_metrics
-        self.regression_metrics = regression_metrics
+                 mode = Modes.BOTH,
+                 classification_metrics: list[mtr.Metric] | None = None,
+                 regression_metrics: list[mtr.Metric] | None = None):
+        if mode not in Modes:
+            raise ValueError("Mode must be one of: Modes.CLASSIFIER, Modes.REGRESSOR, Modes.BOTH")
+
+        if mode == Modes.REGRESSOR or classification_metrics is None:
+            self.classification_metrics = []
+        else:
+            self.classification_metrics = classification_metrics
+        if mode == Modes.CLASSIFIER or regression_metrics is None:
+            self.regression_metrics = []
+        else:
+            self.regression_metrics = regression_metrics
 
     def call_classification_metrics(self, output: torch.Tensor, target: torch.Tensor):
         for metric in self.classification_metrics:
