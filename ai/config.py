@@ -18,7 +18,7 @@ class Modes(Enum):
 # Paths
 os.environ["CAM_ROOT"] = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAM_ROOT = os.environ["CAM_ROOT"]
-DATA_DIR = os.path.join(CAM_ROOT, "data")
+DATA_DIR = os.path.join(CAM_ROOT, "data", "data0706")
 LABELS_PATH = os.path.join(DATA_DIR, "data.json")
 IMG_DIR = os.path.join(DATA_DIR, "photos")
 MODEL_PATH = os.path.join(CAM_ROOT, "ai", "saved_models", "camnet.pth")
