@@ -62,7 +62,6 @@ def train(model: torch.nn.Module,
             loss.backward()
             optimizer.step()
         print(f"Epoch {epoch + 1} Loss: {loss.item()} Accuracy: {acc.compute()}")
-        print(binary_output)
         acc.reset()
     print('Finished Training')
 
