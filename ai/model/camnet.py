@@ -1,14 +1,13 @@
 import torch
 import timm
-from typing import Literal
 
-import ai.config as conf
+from ai.config import Modes, FEATURES, DROPOUT
 
 
 class CamNet(torch.nn.Module):
     def __init__(self,
                  model_name,
-                 mode: Literal['both', 'classifier', 'regressor'] ='both',
+                 mode: Modes = Modes.BOTH,
                  pretrained=True,
                  num_aux_inputs=1):
         """
@@ -22,39 +21,39 @@ class CamNet(torch.nn.Module):
         """
         super(CamNet, self).__init__()
 
-        if mode not in ['classifier', 'regressor', 'both']:
-            raise ValueError("Mode must be one of: 'classifier', 'regressor', 'both'")
+        if mode not in Modes:
+            raise ValueError("Mode must be one of: Modes.CLASSIFIER, Modes. REGRESSOR, Modes.BOTH")
 
         self.mode = mode
         self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
         feature_dim = self.feature_extractor.num_features
 
-        if mode in ['classifier', 'both']:
+        if mode in [Modes.CLASSIFIER, Modes.BOTH]:
             self.classifier = torch.nn.Sequential(
-                torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
+                torch.nn.Linear(feature_dim + num_aux_inputs, FEATURES),
                 torch.nn.ReLU(),
-                torch.nn.Dropout(conf.DROPOUT),
-                torch.nn.Linear(conf.FEATURES, 1),
+                torch.nn.Dropout(DROPOUT),
+                torch.nn.Linear(FEATURES, 1),
             )
 
-        if mode in ['regressor', 'both']:
+        if mode in [Modes.REGRESSOR, Modes.BOTH]:
             self.regressor = torch.nn.Sequential(
-                torch.nn.Linear(feature_dim + num_aux_inputs, conf.FEATURES),
+                torch.nn.Linear(feature_dim + num_aux_inputs, FEATURES),
                 torch.nn.ReLU(),
-                torch.nn.Dropout(conf.DROPOUT),
-                torch.nn.Linear(conf.FEATURES, 1),
+                torch.nn.Dropout(DROPOUT),
+                torch.nn.Linear(FEATURES, 1),
             )
 
     def forward(self, inputs):
         image, scale = inputs
         image_features = self.feature_extractor(image)
 
-        if self.mode == 'classifier':
+        if self.mode == Modes.CLASSIFIER:
             return self.classifier(image_features), None
-        elif self.mode == 'regressor':
+        elif self.mode == Modes.REGRESSOR:
             return None, self.regressor(image_features)
-        else:  # mode == 'both'
+        else:
+            # mode == Modes.BOTH
             binary_output = self.classifier(image_features)
             regression_output = self.regressor(image_features)
             return binary_output, regression_output
-

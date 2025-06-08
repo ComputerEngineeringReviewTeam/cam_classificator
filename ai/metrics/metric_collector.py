@@ -2,6 +2,8 @@ import torch
 import torchmetrics as mtr
 from typing import Literal
 
+from ai.config import Modes
+
 class CamMetricCollector:
     """
     Class for easily storing and running multiple metrics on CamNet model.
@@ -14,12 +16,12 @@ class CamMetricCollector:
                  mode: Literal['both', 'classifier', 'regressor'],
                  classification_metrics: list[mtr.Metric] | None,
                  regression_metrics: list[mtr.Metric] | None):
-        if mode not in ('both', 'classifier', 'regressor'):
+        if mode not in Modes:
             raise ValueError(f"mode {mode} is not supported.")
 
-        if mode in ['both', 'classifier']:
+        if mode in [Modes.CLASSIFIER, Modes.BOTH]:
             self.classification_metrics = classification_metrics
-        if mode in ['both', 'regressor']:
+        if mode in [Modes.REGRESSOR, Modes.BOTH]:
             self.regression_metrics = regression_metrics
 
     def call_classification_metrics(self, output: torch.Tensor, target: torch.Tensor):

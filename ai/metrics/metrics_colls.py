@@ -1,5 +1,7 @@
 import torchmetrics
 
+from ai.config import Modes
+
 import ai.config as conf
 from ai.metrics.metric_collector import CamMetricCollector
 from ai.metrics.metrics import *
@@ -28,14 +30,12 @@ class MetricsCollections:
         regression_metrics=MetricsList.Regressor.std,
     )
     only_classifier = CamMetricCollector(
-        mode='classifier',
+        mode=Modes.CLASSIFIER,
         classification_metrics=MetricsList.Classifier.std,
         regression_metrics=None
     )
     only_regressor = CamMetricCollector(
-        mode='regressor',
+        mode=Modes.REGRESSOR,
         classification_metrics=None,
         regression_metrics=MetricsList.Regressor.std
     )
-
-
