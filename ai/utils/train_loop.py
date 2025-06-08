@@ -24,9 +24,8 @@ def train(model: torch.nn.Module,
     print('Training...')
     for epoch in range(epochs):
         for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
-            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
-                                                                             regression_target, device)
-            binary_output, regression_output = model((image, scale))
+            image, binary_target, regression_target = prepare_tensors(image, binary_target, regression_target, device)
+            binary_output, regression_output = model(image)
             loss = loss_fn(binary_output, regression_output, binary_target, regression_target)
 
             optimizer.zero_grad()

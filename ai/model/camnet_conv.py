@@ -48,8 +48,7 @@ class CamNetConv(torch.nn.Module):
 
 
 
-    def forward(self, inputs):
-        image, scale = inputs
+    def forward(self, image):
         extracted_features = self.extractor(image)
         # # print(extracted_features)
         # flattened_features = extracted_features.flatten(start_dim=1)

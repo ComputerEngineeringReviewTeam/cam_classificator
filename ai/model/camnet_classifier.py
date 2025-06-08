@@ -35,8 +35,7 @@ class CamNetClassifier(torch.nn.Module):
             torch.nn.Linear(features, 1),
         )
 
-    def forward(self, inputs):
-        image, scale = inputs
+    def forward(self, image):
         image_features = self.feature_extractor(image)
 
         binary_output = self.classifier(image_features)

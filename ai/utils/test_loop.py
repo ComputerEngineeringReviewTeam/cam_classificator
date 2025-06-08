@@ -25,9 +25,8 @@ def test(model: torch.nn.Module,
     """
     print("Testing...")
     with torch.no_grad():
-        for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
-            image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
-                                                                             regression_target, device)
-            binary_output, regression_output = model((image, scale))
+        for i, (image, (binary_target, regression_target)) in enumerate(dataloader):
+            image, binary_target, regression_target = prepare_tensors(image, binary_target, regression_target, device)
+            binary_output, regression_output = model(image)
 
             metrics(binary_output, regression_output, binary_target, regression_target)

@@ -197,8 +197,7 @@ class CamDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        scale = torch.tensor(data[ColumnNames.Scale], dtype=self.dtype)
         regression_target = self.tensor_labels[item]
         binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=self.dtype)
 
-        return (image, scale), (binary_target, regression_target)
+        return image, (binary_target, regression_target)
