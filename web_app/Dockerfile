@@ -5,7 +5,7 @@ WORKDIR /app/frontend
 COPY ./frontend/package.json ./
 COPY ./frontend/package-lock.json ./
 
-ENV REACT_APP_SERVER_ADDR=http://192.168.100.4:5000
+ENV REACT_APP_SERVER_ADDR=http://localhost:5000
 
 RUN npm ci
 
@@ -19,7 +19,6 @@ FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
 
 WORKDIR /app/backend
 
