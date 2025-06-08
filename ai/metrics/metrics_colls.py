@@ -31,17 +31,14 @@ class MetricsList:
 
 class MetricsCollections:
     std = CamMetricCollector(
-        mode=conf.MODE,
         classification_metrics=MetricsList.Classifier.std,
         regression_metrics=MetricsList.Regressor.std,
     )
     only_classifier = CamMetricCollector(
-        mode=Modes.CLASSIFIER,
         classification_metrics=MetricsList.Classifier.std,
         regression_metrics=[]
     )
     only_regressor = CamMetricCollector(
-        mode=Modes.REGRESSOR,
         classification_metrics=[],
         regression_metrics=MetricsList.Regressor.std
     )

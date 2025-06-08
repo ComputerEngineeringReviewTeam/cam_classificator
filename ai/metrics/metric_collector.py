@@ -1,8 +1,5 @@
 import torch
 import torchmetrics as mtr
-from typing import Literal
-
-from ai.config import Modes
 
 class CamMetricCollector:
     """
@@ -13,16 +10,10 @@ class CamMetricCollector:
     Operations on this class are run on each of the collected metrics.
     """
     def __init__(self,
-                 mode: Literal['both', 'classifier', 'regressor'],
                  classification_metrics: list[mtr.Metric],
                  regression_metrics: list[mtr.Metric]):
-        if mode not in Modes:
-            raise ValueError(f"mode {mode} is not supported.")
-
-        if mode in [Modes.CLASSIFIER, Modes.BOTH]:
-            self.classification_metrics = classification_metrics
-        if mode in [Modes.REGRESSOR, Modes.BOTH]:
-            self.regression_metrics = regression_metrics
+        self.classification_metrics = classification_metrics
+        self.regression_metrics = regression_metrics
 
     def call_classification_metrics(self, output: torch.Tensor, target: torch.Tensor):
         for metric in self.classification_metrics:
