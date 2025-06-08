@@ -14,8 +14,8 @@ class CamMetricCollector:
     """
     def __init__(self,
                  mode: Literal['both', 'classifier', 'regressor'],
-                 classification_metrics: list[mtr.Metric] | None,
-                 regression_metrics: list[mtr.Metric] | None):
+                 classification_metrics: list[mtr.Metric],
+                 regression_metrics: list[mtr.Metric]):
         if mode not in Modes:
             raise ValueError(f"mode {mode} is not supported.")
 
