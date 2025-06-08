@@ -24,13 +24,15 @@ class CamNet(torch.nn.Module):
         if mode not in Modes:
             raise ValueError("Mode must be one of: Modes.CLASSIFIER, Modes. REGRESSOR, Modes.BOTH")
 
+        import segmentation_models_pytorch as smp
+
         self.mode = mode
-        self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
-        feature_dim = self.feature_extractor.num_features
+        self.encoder = smp.Unet(encoder_name="resnet34", encoder_weights="imagenet", in_channels=3, classes=1).encoder
+        feature_dim = 512
 
         if mode in [Modes.CLASSIFIER, Modes.BOTH]:
             self.classifier = torch.nn.Sequential(
-                torch.nn.Linear(feature_dim + num_aux_inputs, FEATURES),
+                torch.nn.Linear(feature_dim, FEATURES),
                 torch.nn.ReLU(),
                 torch.nn.Dropout(DROPOUT),
                 torch.nn.Linear(FEATURES, 1),
@@ -46,14 +48,13 @@ class CamNet(torch.nn.Module):
 
     def forward(self, inputs):
         image, scale = inputs
-        image_features = self.feature_extractor(image)
+        features = self.encoder(image)[-1]  # [B, 512, H', W']
+        pooled = torch.nn.functional.adaptive_avg_pool2d(features, 1)  # [B, 512, 1, 1]
+        flattened = pooled.view(pooled.size(0), -1)  # [B, 512]
 
         if self.mode == Modes.CLASSIFIER:
-            return self.classifier(image_features), None
+            return self.classifier(flattened), None
         elif self.mode == Modes.REGRESSOR:
-            return None, self.regressor(image_features)
+            return None, self.regressor(flattened)
         else:
-            # mode == Modes.BOTH
-            binary_output = self.classifier(image_features)
-            regression_output = self.regressor(image_features)
-            return binary_output, regression_output
+            return self.classifier(flattened), self.regressor(flattened)
