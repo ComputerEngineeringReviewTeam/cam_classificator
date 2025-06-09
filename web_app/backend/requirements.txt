@@ -1,0 +1,11 @@
+Flask
+Flask-WTF
+python-dotenv
+Flask-CORS
+Flask-Login
+Flask-SQLAlchemy
+Flask-Bcrypt
+psycopg2-binary
+pydantic
+pillow
+gunicorn

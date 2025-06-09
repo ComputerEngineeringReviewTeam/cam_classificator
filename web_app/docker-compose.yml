@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cam_classificator
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/cam_db
+
+      - SERVER_HOST=localhost
+      - SERVER_PORT=5000
+      - SECRET_KEY=1234567890
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+
+        # Set to 'false' in production
+      - DEBUG=false
+
+      # Change this to the server IP.
+      # Make sure this port is the same as the port used by the user to access the application
+      - REACT_APP_SERVER_ADDR=http://localhost:5000
+    networks:
+      - cam-network
+
+  postgres:
+    image: postgres:16.9-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=cam_db
+      # Change in production
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      # For debugging
+      - "5432:5432"
+    volumes:
+      # Change to different type when there is a need
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cam-network
+
+networks:
+  cam-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
