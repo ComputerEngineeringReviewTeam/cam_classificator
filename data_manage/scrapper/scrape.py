@@ -5,7 +5,7 @@ import requests
 
 # Constants
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
-SAVE_DIR = os.path.join("./../../", "data/data0706")
+SAVE_DIR = os.path.join("./../../", "data/data0906")
 session = requests.Session()
 
 

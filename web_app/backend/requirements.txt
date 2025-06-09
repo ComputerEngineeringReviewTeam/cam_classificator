@@ -7,5 +7,11 @@ Flask-SQLAlchemy
 Flask-Bcrypt
 psycopg2-binary
 pydantic
-pillow
 gunicorn
+
+pandas==2.2.3
+pillow==11.1.0
+torch==2.5.1
+torchvision==0.20.1
+torchmetrics==1.6.1
+timm==1.0.14

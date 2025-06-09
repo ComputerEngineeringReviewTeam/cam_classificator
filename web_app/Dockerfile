@@ -23,11 +23,11 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app/backend
 
 COPY ./backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 COPY ./backend .
 COPY --from=builder /app/frontend/build /app/frontend/build
 
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "600", "run:app"]
