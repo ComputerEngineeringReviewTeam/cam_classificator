@@ -5,7 +5,7 @@ import requests
 
 # Constants
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
-SAVE_DIR = os.path.join("./../../", "data")
+SAVE_DIR = os.path.join("./../../", "data/data0706")
 session = requests.Session()
 
 
@@ -58,6 +58,10 @@ def fetch_datapoint(datapoint_id: str) -> dict:
 
     # Validate numeric values
     if not all(is_float(value) for value in [total_area, total_length, mean_thickness, branching_points]):
+        return {}
+    if not is_float(branching_points) and branching_points == "N/a":
+        branching_points = 0.0
+    elif not is_float(branching_points):
         return {}
 
     return {
