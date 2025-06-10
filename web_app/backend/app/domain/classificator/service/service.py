@@ -16,7 +16,7 @@ from ..prep.normalize import normalize_minmax
 
 def classificate_image(image_bytes: bytes) -> ClassificationResult:
     try:
-        img = Image.open(io.BytesIO(image_bytes))
+        img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
         image_width, image_height = img.size
     except Exception as e:
         # If Pillow cannot open the file, it's not a valid image format
@@ -27,7 +27,6 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
     num_rows = math.ceil(image_height / 224)
     overflowed_segment_width = math.ceil((num_cols * 224) - image_width)
     overflowed_segment_height = math.ceil((num_rows * 224) - image_height)
-    total_segments = num_cols * num_rows
 
     img_size = (224, 224)
     transforms_to_use = tf.Compose([
@@ -94,9 +93,14 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
             branching_points_sum += 1
 
 
+    try:
+        good_percent = (fit_fragments_count / (unfit_fragments_count + fit_fragments_count)) * 100
+    except ZeroDivisionError:
+        good_percent = 0
+
     result = ClassificationResult(
         branching_point_sum=branching_points_sum,
-        is_good_percent=(fit_fragments_count / (unfit_fragments_count + fit_fragments_count)) * 100,
+        is_good_percent=good_percent,
         segment_width=224,
         segment_height=224,
         overflowed_segment_width=overflowed_segment_width,
