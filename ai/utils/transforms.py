@@ -13,6 +13,7 @@ class CamTransforms:
             torchvision.transforms.RandomHorizontalFlip(),
             torchvision.transforms.RandomVerticalFlip(),
             torchvision.transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2),
+            torchvision.transforms.ToTensor()
         ])
         grayscale = torchvision.transforms.Compose([
             torchvision.transforms.Resize(conf.TARGET_SIZE),
@@ -20,13 +21,16 @@ class CamTransforms:
             torchvision.transforms.RandomHorizontalFlip(),
             torchvision.transforms.RandomVerticalFlip(),
             torchvision.transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2),
-            torchvision.transforms.Grayscale(num_output_channels=3)
+            torchvision.transforms.Grayscale(num_output_channels=3),
+            torchvision.transforms.ToTensor()
         ])
     class Test:
         std = torchvision.transforms.Compose([
             torchvision.transforms.Resize(conf.TARGET_SIZE),
+            torchvision.transforms.ToTensor()
         ])
         grayscale = torchvision.transforms.Compose([
             torchvision.transforms.Resize(conf.TARGET_SIZE),
-            torchvision.transforms.Grayscale(num_output_channels=3)
+            torchvision.transforms.Grayscale(num_output_channels=3),
+            torchvision.transforms.ToTensor()
         ])

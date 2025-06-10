@@ -3,21 +3,43 @@ import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 from pandas import DataFrame
+import warnings
 
 from ai.config import DISPLAY_IMAGES_AFTER_FILTERS, DISPLAY_IMAGES_BEFORE_FILTERS   # TODO: decouple from config
 from ai.dataset.cam_label import LabelLoader, ColumnNames, CsvLabelLoader, JsonLabelLoader
 import ai.utils.filters as flt
 
 
-COLUMNS_TO_NUM_LABELS = [ColumnNames.BranchingPoints]
+COLUMNS_TO_NORMALIZE = [ColumnNames.BranchingPoints]
 
 
 def normalize_minmax(tensor,
-                     new_max=1.0,
-                     new_min=0.0,
                      amin: float | None = None,
-                     amax: float | None = None):
-    amin, amax = 0.0, 14.0
+                     amax: float | None = None,
+                     new_max=1.0,
+                     new_min=0.0):
+    """
+    Normalize a tensor using min-max scaling.
+
+    This function scales a PyTorch tensor to a specific range [new_min, new_max]
+    using the min-max normalization technique. The minimum (amin) and maximum (amax)
+    can either be provided or calculated directly from the tensor. This method is
+    commonly used for feature scaling in preprocessing steps to bring the data into
+    a comparable range for machine learning tasks.
+
+    Args:
+        tensor: A PyTorch tensor to be normalized.
+        amin: Optional value for the minimum of the tensor's range. If not provided,
+            it will be calculated using the tensor's minimum value.
+        amax: Optional value for the maximum of the tensor's range. If not provided,
+            it will be calculated using the tensor's maximum value.
+        new_max: The maximum value of the scaled range. Defaults to 1.0.
+        new_min: The minimum value of the scaled range. Defaults to 0.0.
+
+    Returns:
+        The normalized tensor where values are scaled to the range specified
+        by [new_min, new_max].
+    """
     if amin is None:
         amin = torch.amin(tensor)
     if amax is None:
@@ -27,44 +49,9 @@ def normalize_minmax(tensor,
     return normalized_column_tensor
 
 
-# TODO: remove scale
 # TODO: make normalization optional
 class CamDataset(Dataset):
-    """
-    Represents a custom dataset loader for managing labeled image data, allowing transformations,
-    filters, normalization, and support for multiple label formats.
 
-    The CamDataset class serves as a utility for handling labeled datasets of images. It supports
-    normalizing label values, applying a series of filters to images for preprocessing, and loading
-    from multiple label formats like CSV and JSON. This class is compatible with PyTorch's Dataset
-    module, enabling seamless integration into data pipelines for training machine learning models.
-
-    Attributes:
-        img_dir: Directory path to the source images.
-        transform: Transformation pipeline to be applied to images.
-        imageFilterSet: Set of filters to process the images.
-        dtype: Data type for tensors used in the dataset.
-        labels: DataFrame containing image paths and associated labels.
-        tensor_labels: Normalized labels prepared as tensors.
-
-    Args:
-        labels DataFrame: DataFrame containing image labels and paths.
-        img_dir str: Directory where images are stored.
-        transform Compose | None: Torchvision transformation applied to the image, optional.
-        imageFilterSet flt.Filters | None: Filters applied to preprocess the image, optional.
-        dtype: Data type for tensors, default is torch.float32.
-        only_good bool: Flag to filter out images with "IsGood" label set to False, default is False.
-
-    Methods:
-        from_label_loader: Creates a CamDataset instance from a LabelLoader.
-        from_csv: Creates a CamDataset instance by loading labels from a CSV file.
-        from_json: Creates a CamDataset instance by loading labels from a JSON file.
-        normalize_and_nanize_labels: Normalizes label columns and replaces specified values with NaN.
-        __load_image: Internal method to load and preprocess an image.
-        __len__: Returns the total number of samples in the dataset.
-        __getitem__: Retrieves the data and labels for a specific index in the dataset.
-
-    """
 
     def __init__(self,
                  labels: DataFrame,
@@ -72,21 +59,20 @@ class CamDataset(Dataset):
                  transform: Compose | None = None,
                  imageFilterSet: flt.Filters | None = None,
                  dtype = torch.float32,
-                 only_good: bool = False):
+                 only_good = False,
+                 normalize = True):
 
         self.img_dir = img_dir
         self.transform = transform
         self.imageFilterSet = imageFilterSet
         self.dtype = dtype
+        self.labels = labels
 
         if only_good:
             self.labels = labels[labels[ColumnNames.IsGood] == True]
-        else:
-            self.labels = labels
 
-        # self.labels = labels[labels[ColumnNames.BranchingPoints] <= 15]
-
-        self.tensor_labels = self.normalize_and_nanize_labels(-1.0, COLUMNS_TO_NUM_LABELS)
+        if normalize:
+            self.labels[COLUMNS_TO_NORMALIZE] = normalize_minmax(self.labels[COLUMNS_TO_NORMALIZE], 0, 200)
 
     @classmethod
     def from_label_loader(cls,
@@ -95,8 +81,9 @@ class CamDataset(Dataset):
                           img_dir: str,
                           transform: Compose | None,
                           imageFilterSet: flt.Filters | None = None,
-                          dtype=torch.float32,
-                          only_good: bool = False):
+                          dtype = torch.float32,
+                          only_good = False,
+                          normalize = True):
         """
         Create a CamDataset from a LabelLoader
 
@@ -110,7 +97,7 @@ class CamDataset(Dataset):
             CamDataset object
         """
         labels = label_loader.load(labels_path)
-        return cls(labels, img_dir, transform, imageFilterSet, dtype, only_good)
+        return cls(labels, img_dir, transform, imageFilterSet, dtype, only_good, normalize)
 
     @classmethod
     def from_csv(cls,
@@ -119,7 +106,8 @@ class CamDataset(Dataset):
                  transform: Compose | None,
                  imageFilterSet: flt.Filters | None = None,
                  dtype = torch.float32,
-                 only_good: bool = False):
+                 only_good = False,
+                 normalize = True):
         """
         Create a CamDataset from a csv file
 
@@ -131,7 +119,8 @@ class CamDataset(Dataset):
         Returns:
             CamDataset object
         """
-        return cls.from_label_loader(CsvLabelLoader(), labels_path, img_dir, transform, imageFilterSet, dtype, only_good)
+        return cls.from_label_loader(CsvLabelLoader(), labels_path, img_dir,
+                                     transform, imageFilterSet, dtype, only_good, normalize)
 
     @classmethod
     def from_json(cls,
@@ -140,7 +129,8 @@ class CamDataset(Dataset):
                   transform: Compose | None,
                   imageFilterSet: flt.Filters | None = None,
                   dtype = torch.float32,
-                  only_good: bool = False):
+                  only_good = False,
+                  normalize = True):
         """
         Create a CamDataset from a json file
 
@@ -152,8 +142,10 @@ class CamDataset(Dataset):
         Returns:
             CamDataset object
         """
-        return cls.from_label_loader(JsonLabelLoader(), labels_path, img_dir, transform, imageFilterSet, dtype, only_good)
+        return cls.from_label_loader(JsonLabelLoader(), labels_path, img_dir,
+                                     transform, imageFilterSet, dtype, only_good, normalize)
 
+    @warnings.deprecated
     def normalize_and_nanize_labels(self, value_to_nan: any, column_list: list[str]):
         """
         Prepares and processes label data into a tensor format by normalizing values
@@ -180,12 +172,13 @@ class CamDataset(Dataset):
         tensor_labels = torch.column_stack(labels_as_tensor)
         return tensor_labels
 
-    def __load_image(self, image_name: str):
+    # TODO: decouple from config
+    def __load_image(self, image_name: str) -> flt.Image:
         """
         Loads image and applies filters.
         """
         image_path = os.path.join(self.img_dir, image_name)
-        image = flt.Image(image_path)
+        image = flt.Image.fromPath(image_path)
         if DISPLAY_IMAGES_BEFORE_FILTERS:
             image.getImage().show()
         image = self.imageFilterSet.applyFilters(image)
@@ -196,15 +189,29 @@ class CamDataset(Dataset):
     def __len__(self):
         return len(self.labels)
 
-    def __getitem__(self, item) -> tuple[tuple[torch.Tensor, torch.Tensor], tuple[torch.Tensor, torch.Tensor]]:
+    def __getitem__(self, item) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
+        """
+        Lazily loads the image and applies the configured filters and transforms.
+        Returns the label data split into binary classification label ant other numerical parameters.
+
+        Args:
+            item: Index of the image and target to be retrieved
+
+        Returns:
+            - 3D torch.Tensor representing the preprocessed image
+                - 1D torch.Tensor with the IsGood label in dtype
+                - 1D torch.Tensor with the BranchingPoints label in dtype
+        """
         data = self.labels.iloc[item]
 
         image = self.__load_image(str(data[ColumnNames.ImageName]))
-        image = image.getTensor() / 255.0   # most professional normalization; may be redundant if using transform Normalize()
-        if self.transform:
-            image = self.transform(image)
 
-        regression_target = self.tensor_labels[item]
+        if self.transform:
+            image = self.transform(image.getImage())
+        else:
+            image = image.getTensor()
+
+        regression_target = data[ColumnNames.BranchingPoints]
         binary_target = torch.tensor(data[ColumnNames.IsGood], dtype=self.dtype)
 
         return image, (binary_target, regression_target)
