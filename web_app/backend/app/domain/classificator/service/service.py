@@ -70,6 +70,7 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
 
     fragments = []
     fit_fragments_count = 0
+    unfit_fragments_count = 0
     branching_points_sum = 0
     for i, fragment in enumerate(split_image(img, 224)):
         is_fragment_useful = fragment_classifier(fragment)
@@ -83,6 +84,7 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
             continue
         elif not is_fragment_fit:
             fragments.append(SegmentData(branching_point=None, is_good=False))
+            unfit_fragments_count += 1
             continue
         fit_fragments_count += 1
 
@@ -94,7 +96,7 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
 
     result = ClassificationResult(
         branching_point_sum=branching_points_sum,
-        is_good_percent=(fit_fragments_count / total_segments) * 100,
+        is_good_percent=(fit_fragments_count / (unfit_fragments_count + fit_fragments_count)) * 100,
         segment_width=224,
         segment_height=224,
         overflowed_segment_width=overflowed_segment_width,
