@@ -1,9 +1,10 @@
 import torch
 
+from ai.model.camnet_base import CamNetBase
 from ai.metrics.metric_collector import CamMetricCollector
 from ai.utils.dataset_helpers import prepare_tensors
 
-def test(model: torch.nn.Module,
+def test(model: CamNetBase,
          dataloader: torch.utils.data.DataLoader,
          metrics: CamMetricCollector,
          device: str):
@@ -14,8 +15,8 @@ def test(model: torch.nn.Module,
     mode, ensuring that no gradients are computed.
 
     Arguments:
-        model (torch.nn.Module): The model to be evaluated. It should be a subclass of the
-            `torch.nn.Module` class.
+        model (CamNetBase): The model to be evaluated. It should be a subclass of the
+            `ai.model.camnet_base.CamNetBase` class.
         dataloader (torch.utils.data.DataLoader): A DataLoader object providing the test dataset
             in batches.
         metrics (CamMetricCollector): An object for collecting and computing evaluation metrics.

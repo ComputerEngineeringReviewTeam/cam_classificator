@@ -1,9 +1,11 @@
 import torch
 
+from ai.model.camnet_base import CamNetBase
+from ai.loss_fn.camloss_base import CamLossBase
 from ai.utils.dataset_helpers import prepare_tensors
 
-def train(model: torch.nn.Module,
-          loss_fn: torch.nn.Module,
+def train(model: CamNetBase,
+          loss_fn: CamLossBase,
           dataloader: torch.utils.data.DataLoader,
           optimizer: torch.optim.Optimizer,
           epochs: int,
@@ -18,9 +20,10 @@ def train(model: torch.nn.Module,
     through printed progress messages.
 
     Parameters:
-    model : torch.nn.Module
-        The neural network model to be trained.
-    loss_fn : torch.nn.Module
+    model : CamNetBas
+        The model to be evaluated. It should be a subclass of the
+        `ai.model.camnet_base.CamNetBase` class.
+    loss_fn : CamLossBase
         The loss function used to compute the loss between the model outputs
         and the targets.
     dataloader : torch.utils.data.DataLoader

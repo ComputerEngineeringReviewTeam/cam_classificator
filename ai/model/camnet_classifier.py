@@ -1,8 +1,10 @@
 import torch
 import timm
 
+from ai.model.camnet_base import CamNetBase
 
-class CamNetClassifier(torch.nn.Module):
+
+class CamNetClassifier(CamNetBase):
     """
     A neural network model for binary classification tasks using an image feature extractor and auxiliary inputs.
 
@@ -23,7 +25,7 @@ class CamNetClassifier(torch.nn.Module):
                  num_aux_inputs = 0,
                  features = 256,
                  dropout = 0.2):
-        super(CamNetClassifier, self).__init__()
+        super().__init__()
 
         self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
         feature_dim = self.feature_extractor.num_features
@@ -39,4 +41,4 @@ class CamNetClassifier(torch.nn.Module):
         image_features = self.feature_extractor(image)
 
         binary_output = self.classifier(image_features)
-        return binary_output, torch.zeros(binary_output.shape())
+        return binary_output, None

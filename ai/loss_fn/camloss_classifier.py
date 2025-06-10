@@ -1,9 +1,11 @@
 import torch
 
+from ai.loss_fn.camloss_base import CamLossBase
 
-class CamLossClassifier(torch.nn.Module):
+
+class CamLossClassifier(CamLossBase):
     def __init__(self):
-        super(CamLossClassifier, self).__init__()
+        super().__init__()
         self.bce_loss = torch.nn.BCEWithLogitsLoss()
 
     def forward(self, binary_output, regression_output, binary_target, regression_target):

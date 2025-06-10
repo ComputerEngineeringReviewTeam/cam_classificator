@@ -1,8 +1,10 @@
 import torch
 import timm
 
+from ai.model.camnet_base import CamNetBase
 
-class CamNetRegressor(torch.nn.Module):
+
+class CamNetRegressor(CamNetBase):
     """
     A neural network model for regression tasks with optional auxiliary inputs.
 
@@ -26,7 +28,7 @@ class CamNetRegressor(torch.nn.Module):
                  num_aux_inputs = 1,
                  features = 256,
                  dropout = 0.2):
-        super(CamNetRegressor, self).__init__()
+        super().__init__()
 
         self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
         feature_dim = self.feature_extractor.num_features
@@ -42,4 +44,4 @@ class CamNetRegressor(torch.nn.Module):
         image_features = self.feature_extractor(image)
 
         regression_output = self.regressor(image_features)
-        return torch.zeros(regression_output.size()), regression_output
+        return None, regression_output

@@ -1,10 +1,11 @@
 import torch
 import timm
 
+from ai.model.camnet_base import CamNetBase
 from ai.utils.modes import Modes
 
 
-class CamNet(torch.nn.Module):
+class CamNet(CamNetBase):
     def __init__(self,
                  model_name,
                  mode: Modes = Modes.BOTH,
@@ -34,7 +35,7 @@ class CamNet(torch.nn.Module):
             dropout (float): The dropout rate to apply in the intermediate layer of the classifier/
                 regressor. Default is 0.2.
         """
-        super(CamNet, self).__init__()
+        super().__init__()
 
         if mode not in Modes:
             raise ValueError("Mode must be one of: Modes.CLASSIFIER, Modes.REGRESSOR, Modes.BOTH")

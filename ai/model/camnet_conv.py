@@ -1,9 +1,11 @@
 import torch
 
+from ai.model.camnet_base import CamNetBase
 
-class CamNetConv(torch.nn.Module):
+
+class CamNetConv(CamNetBase):
     def __init__(self):
-        super(CamNetConv, self).__init__()
+        super().__init__()
 
         self.extractor = torch.nn.Sequential(
             # 224 x 224 x 3
