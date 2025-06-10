@@ -3,9 +3,11 @@ import os
 import sys
 import requests
 
+import global_config
+
 # Constants
 BASE_URL = "https://kask.eti.pg.edu.pl/cam"
-SAVE_DIR = os.path.join("./../../", "data/data0706")
+SAVE_DIR = global_config.DATA_DIR
 session = requests.Session()
 
 

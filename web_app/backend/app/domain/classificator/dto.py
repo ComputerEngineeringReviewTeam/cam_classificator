@@ -6,8 +6,8 @@ class SegmentData(BaseModel):
     """
     DTO for a single analyzed image segment.
     """
-    branching_point: int = None
-    is_good: bool = None
+    branching_point: int | None = None
+    is_good: bool | None = None
 
 
 class ClassificationResult(BaseModel):

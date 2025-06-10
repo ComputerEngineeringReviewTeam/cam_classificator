@@ -108,12 +108,12 @@ class Filters:
 
 
 class Image:
-    def __init__(self, pil_image):
-        self.imagePIL = pil_image
+    def __init__(self, image):
+        self.imagePIL = image
 
     @classmethod
-    def fromPath(cls, path):
-        return cls(PIL.Image.open(path, mode="r").convert("RGB"))   # to ensure 3 channels
+    def load(cls, path):
+        return cls(PIL.Image.open(path, mode="r"))
 
     def getImage(self):
         return self.imagePIL

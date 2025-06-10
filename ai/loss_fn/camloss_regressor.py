@@ -1,9 +1,11 @@
 import torch
 
+from ai.loss_fn.camloss_base import CamLossBase
 
-class CamLossRegressor(torch.nn.Module):
+
+class CamLossRegressor(CamLossBase):
     def __init__(self):
-        super(CamLossRegressor, self).__init__()
+        super().__init__()
         self.mse_loss = torch.nn.MSELoss(reduction='none')
 
     def forward(self, binary_output, regression_output, binary_target, regression_target):

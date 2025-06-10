@@ -1,11 +1,9 @@
 import torch
 
-from ai.model.camnet_base import CamNetBase
 
-
-class CamNetConv(CamNetBase):
+class CamNetConv(torch.nn.Module):
     def __init__(self):
-        super().__init__()
+        super(CamNetConv, self).__init__()
 
         self.extractor = torch.nn.Sequential(
             # 224 x 224 x 3
@@ -50,7 +48,8 @@ class CamNetConv(CamNetBase):
 
 
 
-    def forward(self, image):
+    def forward(self, inputs):
+        image, scale = inputs
         extracted_features = self.extractor(image)
         # # print(extracted_features)
         # flattened_features = extracted_features.flatten(start_dim=1)

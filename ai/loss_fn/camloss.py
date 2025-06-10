@@ -1,10 +1,12 @@
 import torch
 
-from ai.config import Modes
+from ai.loss_fn.camloss_base import CamLossBase
+from ai.utils.modes import Modes
 
-class CamLoss(torch.nn.Module):
+
+class CamLoss(CamLossBase):
     def __init__(self, mode: Modes = Modes.BOTH):
-        super(CamLoss, self).__init__()
+        super().__init__()
 
         self.mode = mode
 

@@ -1,7 +1,5 @@
 import torchmetrics
 
-from ai.config import Modes
-
 import ai.config as conf
 from ai.metrics.metric_collector import CamMetricCollector
 from ai.metrics.metrics import *
