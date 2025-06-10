@@ -12,6 +12,5 @@ def test(model: torch.nn.Module,
         for i, ((image, scale), (binary_target, regression_target)) in enumerate(dataloader):
             image, scale, binary_target, regression_target = prepare_tensors(image, scale, binary_target,
                                                                              regression_target, device)
-
             binary_output, regression_output = model((image, scale))
             metric_aggregator(binary_output, regression_output, binary_target, regression_target)
