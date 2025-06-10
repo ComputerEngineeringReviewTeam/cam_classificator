@@ -8,21 +8,28 @@ def test(model: torch.nn.Module,
          metrics: CamMetricCollector,
          device: str):
     """
-    Tests a PyTorch model using data from a dataloader and collects metrics.
+    Test a provided model using data from a dataloader and compute metrics. This function
+    processes batches of data, applies the model to generate outputs, and evaluates those
+    outputs against the targets using the provided metrics object. It operates in inference
+    mode, ensuring that no gradients are computed.
 
     Arguments:
-        model (torch.nn.Module): The PyTorch model to be evaluated.
-        dataloader (torch.utils.data.DataLoader): An iterator that provides
-            batches of data for testing, including input features and
-            corresponding targets.
-        metrics (CamMetricCollector): Object for collecting and
-            aggregating metrics during the evaluation process.
-        device (str): Device to transfer the tensors to, typically 'cpu'
-            or 'cuda'.
+        model (torch.nn.Module): The model to be evaluated. It should be a subclass of the
+            `torch.nn.Module` class.
+        dataloader (torch.utils.data.DataLoader): A DataLoader object providing the test dataset
+            in batches.
+        metrics (CamMetricCollector): An object for collecting and computing evaluation metrics.
+            It should be callable and able to handle the model's outputs and corresponding
+            targets.
+        device (str): The device on which the computation will take place (e.g., 'cpu' or 'cuda').
 
-    Note:
-        This function runs in no gradient mode by default.
+    Raises:
+        None
+
+    Returns:
+        None
     """
+
     print("Testing...")
     with torch.no_grad():
         for i, (image, (binary_target, regression_target)) in enumerate(dataloader):

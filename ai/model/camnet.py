@@ -8,10 +8,10 @@ class CamNet(torch.nn.Module):
     def __init__(self,
                  model_name,
                  mode: Modes = Modes.BOTH,
-                 pretrained=True,
-                 num_aux_inputs=0,
-                 features: int = 256,
-                 dropout: float = 0.2):
+                 pretrained = True,
+                 num_aux_inputs = 0,
+                 features = 256,
+                 dropout = 0.2):
         """
         Initializes the CamNet model, a neural network designed to accommodate two modes of operation:
         classification and regression. The model allows the integration of auxiliary inputs and is

@@ -22,10 +22,10 @@ class CamNetRegressor(torch.nn.Module):
     """
     def __init__(self,
                  model_name,
-                 pretrained=True,
-                 num_aux_inputs=1,
-                 features=256,
-                 dropout=0.2):
+                 pretrained = True,
+                 num_aux_inputs = 1,
+                 features = 256,
+                 dropout = 0.2):
         super(CamNetRegressor, self).__init__()
 
         self.feature_extractor = timm.create_model(model_name, pretrained=pretrained, num_classes=0)
