@@ -21,8 +21,8 @@ def run_camnet():
     # Create datasets and dataloaders for loading the data using shortcut functions
     data_df = JsonLabelLoader().load(gconf.LABELS_PATH)
     train_data, test_data = sample_labels(data_df, conf.TRAIN_FRACTION, conf.RANDOM_SEED, balanced=conf.BALANCED_SPLIT)
-    train_dataset = CamDataset(train_data, gconf.IMG_DIR, train_tsfms, conf.datasetFilterSet)
-    test_dataset = CamDataset(test_data, gconf.IMG_DIR, test_tsfms, conf.datasetFilterSet)
+    train_dataset = CamDataset(train_data, gconf.IMG_DIR, train_tsfms, conf.datasetFilterSet, only_good=conf.ONLY_GOOD)
+    test_dataset = CamDataset(test_data, gconf.IMG_DIR, test_tsfms, conf.datasetFilterSet, only_good=conf.ONLY_GOOD)
     train_loader, test_loader = to_dataloaders(train_dataset, test_dataset, batch_size=conf.BATCH_SIZE)
 
     # Create the model, optimizer and loss function
