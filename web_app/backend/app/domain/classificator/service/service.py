@@ -90,7 +90,7 @@ def classificate_image(image_bytes: bytes) -> ClassificationResult:
         fragment_branching_pts = branching_pts_regressor(fragment)
         fragments.append(SegmentData(branching_point=fragment_branching_pts, is_good=True))
         if fragment_branching_pts is not None:
-            branching_points_sum += 1
+            branching_points_sum += fragment_branching_pts
 
 
     try:
