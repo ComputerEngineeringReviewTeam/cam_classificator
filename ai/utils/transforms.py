@@ -4,6 +4,7 @@ import ai.config as conf
 
 
 # TODO: make it more modular ?
+# TODO: decouple from config
 class CamTransforms:
     class Train:
         std = torchvision.transforms.Compose([

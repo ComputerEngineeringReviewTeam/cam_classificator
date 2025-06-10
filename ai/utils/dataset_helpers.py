@@ -10,7 +10,6 @@ from ai.config import datasetFilterSet
 
 
 def prepare_tensors(image: torch.Tensor,
-                    scale: torch.Tensor,
                     binary_target: torch.Tensor,
                     regression_target: torch.Tensor,
                     device: str):
@@ -21,22 +20,20 @@ def prepare_tensors(image: torch.Tensor,
 
     Args:
         image: torch.Tensor
-        scale: torch.Tensor
         binary_target: torch.Tensor
         regression_target: torch.Tensor
         device: str
 
     Returns:
         image: torch.Tensor
-        scale: torch.Tensor
         binary_target: torch.Tensor
         regression_target: torch.Tensor
     """
 
-    image, scale = image.to(device), scale.to(device)
+    image = image.to(device)
     binary_target, regression_target = binary_target.to(device), regression_target.to(device)
     binary_target = binary_target.unsqueeze(1)
-    return image, scale, binary_target, regression_target
+    return image, binary_target, regression_target
 
 
 def train_test_sample(all_labels: DataFrame,
